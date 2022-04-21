@@ -6,6 +6,10 @@ export const DBURL = {
   url: process.env.DB_URL,
 };
 
+export const HOST = {
+  host: process.env.HOST,
+};
+
 export const JWT = {
   key: process.env.JWTSECRET,
 };
@@ -24,21 +28,89 @@ export const TWILIO = {
   serviceSid: String(process.env.SERVICE_SID),
 };
 
+export const JWTEXP = {
+  exp:2 * 24 * 60 * 1000
+}
+
 export const SIGNUP = {
   error: "User already exist.",
-  message: "Data can not fetched.",
-  err: "SignUp Failed.",
+  message: "Signup successfully"
 };
 
 export const VERIFYOTP = {
-  message: "User is Verified!!",
+  message: "twilio not working",
   error: "Phone number or code does not matched.",
 };
 
 export const LOGIN = {
   message: "OTP sent successfully!!",
-  err: "Data not get.",
-  error: "Phone number not matched.",
-  data: "Please active your profile.",
+  error: "Phone number not matched or user profile is inactive.",
   errr: "Some thing went wrong.",
 };
+
+export let STATUS_MSG = {
+  ERROR: {
+      BAD_REQUEST: {
+          statusCode: 400,
+          success: false,
+          message: "BAD REQUEST",
+          type: "BAD_REQUEST"
+      },
+      OTPVERIFY: {
+        statusCode: 400,
+        success: false,
+        message: "otp not matched.",
+        type: "BAD_REQUEST"
+    },
+      INCORRECT_CREDENTIALS: {
+          statusCode: 400,
+          success: false,
+          message: "Incorrect credentials. Please try again",
+          type: "INCORRECT_CREDENTIALS"
+      },
+      DB_ERROR: {
+          statusCode: 400,
+          success: false,
+          message: 'DB Error : ',
+          type: 'DB_ERROR'
+      },
+      INVALID_TOKEN: {
+          statusCode: 401,
+          success: false,
+          message: 'Invalid token provided',
+          type: 'INVALID_TOKEN'
+      }, 
+    },
+
+  SUCCESS: {
+      DEFAULT: {
+          statusCode: 200,
+          success: true,
+          message: 'Success',
+          type: 'DEFAULT'
+      },
+      CREATED: {
+          statusCode: 200,
+          success: true,
+          message: 'Created Successfully',
+          type: 'CREATED'
+      },
+      OTPGET: {
+        statusCode: 200,
+        success: true,
+        message: 'Otp sent Successfully',
+        name: 'OTPGET'
+      },
+      OTPVERIFY: {
+        statusCode: 200,
+        success: true,
+        message: 'Otp verify Successfully',
+        name: 'OTPVERIFY'
+      },
+      LOGIN: {
+          statusCode: 200,
+          success: true,
+          message: 'Log In Successful',
+          type: 'LOGIN'
+      },     
+    }  }

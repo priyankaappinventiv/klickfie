@@ -1,7 +1,8 @@
 import auth from "../controllers/user/controller";
 import express from "express";
 import upload from "../controllers/user/imageUpload";
-import signUpValidate from "../validator/validator";
+import signUpValidate from "../validator/signUpvalidator";
+import loginValidate from "../validator/loginValidator";
 const router = express.Router();
 
 /**
@@ -90,7 +91,7 @@ router.post("/signup", upload, signUpValidate, auth.signUp);
  *              description: Login successfully.
  */
 
-router.post("/login", auth.login);
+router.post("/login",loginValidate, auth.login);
 
 /**
  * @swagger
@@ -131,6 +132,6 @@ router.post("/login", auth.login);
  *          description: Get data successfully.
  */
 
-router.post("/verifyotp", auth.verifyOtp);
+router.post("/verifyotp",auth.verifyOtp);
 
 export default router;

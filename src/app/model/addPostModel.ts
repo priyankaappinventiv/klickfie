@@ -5,11 +5,8 @@ const Model_Name = "addPost";
 
 const addPostSchema = new Schema<post>(
   {
-    _id: {
-      type: String,
-    },
     user_id: {
-      type: [Schema.Types.ObjectId],
+      type: Schema.Types.ObjectId,
       ref: "user",
     },
     imageUrl: {
@@ -30,11 +27,11 @@ const addPostSchema = new Schema<post>(
       default: Date.now,
     },
     like: {
-      type: [Schema.Types.ObjectId],
+      type: Number,
       ref: "like",
     },
     comment: {
-      type: [Schema.Types.ObjectId],
+      type: Number,
       ref: "comment",
     },
   },

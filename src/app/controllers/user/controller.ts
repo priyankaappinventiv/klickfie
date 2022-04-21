@@ -2,102 +2,84 @@ import user from "../../model/userModel";
 import twilio from "twilio";
 import { Request, Response } from "express";
 import jwtSign from "../../services/services";
+import { HydratedDocument } from "mongoose";
+import { JwtPayload } from "jsonwebtoken";
+import { iUser } from "../../interface/userInterface";
+import { otp } from "../../services/otpservice";
 import {
-  LOGIN,
   SIGNUP,
-  VERIFYOTP,
   PORT,
   TWILIO,
+  HOST,
+  STATUS_MSG,
 } from "../../constant/constant";
 
-const client = twilio(TWILIO.accountSid, TWILIO.authToken);
+const client: twilio.Twilio = twilio(TWILIO.accountSid, TWILIO.authToken);
 
 const signUp = async (req: Request, res: Response): Promise<void> => {
   const { name, email, phoneNumber, imageUrl } = req.body;
-  const userExist = await user.findOne({ email });
-  if (userExist) {
-    res.status(400).json({ error: SIGNUP.error });
-  } else {
-    const User = new user({
-      name: name,
-      email: email.toLowerCase(),
-      phoneNumber: phoneNumber,
-      imageUrl: `http://localhost:${PORT.baseUrl}/${req.file?.filename}`,
-    });
-    try {
-      const data = await User.save();
-      if (!data) {
-        res.status(404).json({ message: SIGNUP.message });
-      } else {
-        res.status(200).json({ data });
-      }
-    } catch (err) {
-      res.status(400).json({ err: SIGNUP.err });
+  const userExist: HydratedDocument<iUser> | null = await user.findOne({
+    email,
+  });
+  try {
+    if (userExist) {
+      res.status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode).json({ error: SIGNUP.error });
+    } else {
+      const User: HydratedDocument<iUser> | null = new user({
+        name: name,
+        email: email,
+        phoneNumber: phoneNumber,
+        imageUrl: `${HOST.host}:${PORT.baseUrl}/${req.file?.filename}`,
+      });
+      const data: HydratedDocument<iUser> | null = await User.save();
+      res
+        .status(STATUS_MSG.SUCCESS.DEFAULT.statusCode)
+        .json(STATUS_MSG.SUCCESS.DEFAULT);
     }
+  } catch (err) {
+    res.status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode).json("error");
   }
 };
 
 const verifyOtp = async (req: Request, res: Response): Promise<void> => {
+  try{
   const { phoneNumber, code } = req.body;
-  if (phoneNumber && code.length == 4) {
-    client.verify
-      .services(TWILIO.serviceSid)
-      .verificationChecks.create({
-        to: `+${phoneNumber}`,
-        code: code,
-      })
-      .then((data: any) => {
-        if (data.status === "approved") {
-          res.status(200).json({
-            message: VERIFYOTP.message,
-            data,
-          });
-        }
-      });
-  } else {
-    res.status(400).json({
-      error: VERIFYOTP.error,
-      phoneNumber: phoneNumber,
-      code: code,
-    });
+  const data: HydratedDocument<iUser> | null = await user.findOne({
+    phoneNumber,
+  });
+  if (data) {
+    const is_verify = await otp.verifyOTP(phoneNumber, code);
+    console.log(is_verify)
+    
+    //const token: string | JwtPayload = jwtSign(data._id);
+    res.status(STATUS_MSG.SUCCESS.DEFAULT.statusCode).json(is_verify);
   }
+  } catch(err){
+    res.status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode).json(err);
+  }  
 };
 
 const login = async (req: Request, res: Response): Promise<void> => {
-  const { phoneNumber } = req.body;
-  const userActive = await user.findOne({ phoneNumber, is_active: true });
-  if (userActive) {
-    try {
-      let data = await user.findOne({ phoneNumber });
-      if (data && phoneNumber == data.phoneNumber) {
-        client.verify
-          .services(TWILIO.serviceSid)
-          .verifications.create({
-            to: `+${phoneNumber}`,
-            channel: "sms",
-          })
-          .then((data: any) => {
-            res.status(200).send({
-              message: LOGIN.message,
-              phoneNumber: phoneNumber,
-              data,
-            });
-          });
-        const token = jwtSign(data._id);
-        if (!data) {
-          res.json({ err: LOGIN.err });
-        } else {
-          res.json({ token, data });
-        }
-      } else {
-        res.json({ error: LOGIN.error });
-      }
-    } catch (errr) {
-      res.json({ errr: LOGIN.errr });
-    }
-  } else {
-    res.json({ data: LOGIN.data });
+  try{
+    const { phoneNumber } = req.body;
+    const userActive: HydratedDocument<iUser> | null = await user.findOne({
+      phoneNumber,
+      is_active: true,
+    });
+    if (userActive) {
+      const isgetOTP: string = await otp.getOTP(phoneNumber);
+      console.log(isgetOTP);
+      res.status(STATUS_MSG.SUCCESS.DEFAULT.statusCode).json(isgetOTP);
+    } 
+  }catch(err:any){
+    console.log(err); 
+    res.status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode).json({err:err.message});
   }
-};
+}
+
+const post = async (req: Request, res: Response): Promise<void> => {
+  const { title, like, comment, imageUrl } = req.body;
+
+}
 
 export default { signUp, login, verifyOtp };

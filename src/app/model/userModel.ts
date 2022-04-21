@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import { Schema, model, connect } from "mongoose";
-import { user } from "../interface/userInterface";
+import { iUser } from "../interface/userInterface";
 const Model_Name = "user";
 
-const userSchema = new Schema<user>(
+const userSchema = new Schema<iUser>(
   {
     name: {
       type: String,
@@ -32,6 +32,6 @@ const userSchema = new Schema<user>(
   { timestamps: true }
 );
 
-const user = mongoose.model<user>(Model_Name, userSchema);
+const user = mongoose.model<iUser>(Model_Name, userSchema);
 
 export default user;

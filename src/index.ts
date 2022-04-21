@@ -1,5 +1,5 @@
 import express from "express";
-import dbConnection from "./app/config/dbConnect";
+import dbConnection from "./app/dbConnection/dbConnect";
 import router from "./app/router/router";
 import user from "./app/model/userModel";
 import swaggerJSdoc from "swagger-jsdoc";
@@ -56,3 +56,20 @@ app.use(express.static(path.join(__dirname, "./public/upload")));
 app.listen(`${baseUrl}`, () => {
   console.log(`Express server is running.`);
 });
+
+
+
+
+// import { createClient } from 'redis';
+
+// (async () => {
+//   const client = createClient();
+
+//   client.on('error', (err) => console.log('Redis Client Error', err));
+
+//   await client.connect();
+
+//   await client.set('name', 'Abhay');
+//   const redisvalue = await client.get('name');
+//   console.log(redisvalue);
+// })();

@@ -4,7 +4,7 @@ import { DBURL } from "../constant/constant";
 const url: string = String(DBURL.url);
 mongoose.connect(url);
 
-const dbConnection = mongoose.connection;
+const dbConnection: mongoose.Connection = mongoose.connection;
 dbConnection.on("error", console.error.bind(console, "connection error:"));
 
 dbConnection.once("open", function () {
