@@ -20,7 +20,7 @@ const signUpValidate = [
     .not()
     .isEmpty()
     .withMessage("PhoneNumber can not be empty!")
-    .isNumeric()
+    .isString()
     .withMessage("Phone number should be numeric.")
     .isLength({ min: 12, max: 12 })
     .withMessage("Minimum 10 characters required!"),

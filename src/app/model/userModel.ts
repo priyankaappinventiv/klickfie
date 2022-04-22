@@ -15,7 +15,7 @@ const userSchema = new Schema<iUser>(
       require: true,
     },
     phoneNumber: {
-      type: Number,
+      type: String,
       unique: true,
       require: true,
     },

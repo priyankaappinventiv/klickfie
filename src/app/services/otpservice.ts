@@ -4,7 +4,7 @@ import { TWILIO } from "../constant/constant";
 const client: twilio.Twilio = twilio(TWILIO.accountSid, TWILIO.authToken);
 
 class otpService {
-  async getOTP(phoneNumber: Number): Promise<string> {
+  async getOTP(phoneNumber: string): Promise<string> {
     try {
       const data = await client.verify
         .services(TWILIO.serviceSid)
@@ -15,32 +15,20 @@ class otpService {
     }
   }
 
-  async verifyOTP(phoneNumber: Number, otp: Number): Promise<any> {
-    try {
-      const data= await client.verify
-        .services(TWILIO.serviceSid)
-        .verificationChecks.create({ to: `+${phoneNumber}`, code: `+${otp}` })
-        .then((data: any) => {
-          console.log(data);
-          
-          if (data.status === "approved") {
-            return {
-              message: "User is Verified!!",
-              data: data
-            };
-          }
-        
-      })
-      .catch((err)=>{
-        console.log(err);
-      })
-       
-      
-                      
-    } catch (err: any) {
-      return Promise.reject(STATUS_MSG.ERROR.OTPVERIFY);
-    }
+//   async verifyOTP(phoneNumber: string, code: string): Promise<any> {
+//     try {
+//         client.verify
+//         .services(TWILIO.serviceSid)
+//         .verificationChecks.create({ to: `+${phoneNumber}`, code: code })
+//         .then((data)=> {
+//             if (data.status == "approved") {
+//               return Promise.resolve(STATUS_MSG.SUCCESS.OTPVERIFY);      
+//             }          
+//         })  
+//     } catch (err: any) {
+//       return Promise.reject(STATUS_MSG.ERROR.OTPVERIFY);
+//     }
+//   }
   }
-}
 
 export const otp = new otpService();

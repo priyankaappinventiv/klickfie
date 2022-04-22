@@ -4,7 +4,7 @@ export interface iUser {
   _id: String;
   name: String;
   email: String;
-  phoneNumber: Number;
+  phoneNumber: String;
   imageUrl: String;
   interests?: [Schema.Types.ObjectId];
   is_active: Boolean;

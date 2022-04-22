@@ -38,7 +38,10 @@ export const SIGNUP = {
 };
 
 export const VERIFYOTP = {
+  status:"approved",
   message: "twilio not working",
+  msg:"User is Verified!!",
+  err:"invalid otp",
   error: "Phone number or code does not matched.",
 };
 
