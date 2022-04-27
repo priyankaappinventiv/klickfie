@@ -1,5 +1,11 @@
 import { Schema } from "mongoose";
 
+export interface otpCode{
+  code:String,
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface iUser {
   _id: String;
   name: String;

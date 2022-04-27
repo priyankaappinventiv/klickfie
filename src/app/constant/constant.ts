@@ -39,7 +39,7 @@ export const SIGNUP = {
 
 export const VERIFYOTP = {
   status:"approved",
-  message: "twilio not working",
+ // message: "twilio not working",
   msg:"User is Verified!!",
   err:"invalid otp",
   error: "Phone number or code does not matched.",
@@ -49,6 +49,7 @@ export const LOGIN = {
   message: "OTP sent successfully!!",
   error: "Phone number not matched or user profile is inactive.",
   errr: "Some thing went wrong.",
+  data:"Phone Number not matched."
 };
 
 export let STATUS_MSG = {
@@ -117,3 +118,62 @@ export let STATUS_MSG = {
           type: 'LOGIN'
       },     
     }  }
+
+
+    export const Constants = {
+      statusCode: {
+          invalid: 400,
+          loginFaild: 401,
+          sucess: 200,
+          alreadyLoggedIn:406,
+          alreadyExist:409,
+          notFound:404
+      },
+      messages:{
+          userAlreadyLoggedIn:"U r alerady Logged in...",
+          invalidUserId:"Enter Valid userId",
+          invalidPassword:"Enter Valid Password",
+          sucess:'Welcome to Mutelcore Family',
+          invalidUser:"User Not Found",
+          mailSentSucess:"email sent to ur mail i'd",
+          otpSentSucess:"otp sent Sucessfully...",
+          invalidOtp:"Invalid Otp...",
+          passwordResetSucess:"Password Reset Sucessfully...",
+          fileMissing:`file missing... accept only .png .jpg .jpeg file`,
+          userAlreadyExist:'User already exist',
+          profileUpdate:"Profile Update Sucessfully..."
+  
+      }
+  }
+  
+  export class userResponse {
+      status = {
+          code: 400,
+          status: false,
+          message: "Something went wrong"
+  
+      }
+  }
+
+    //class ResponceClass{
+      //   ERROR_MSG (){
+      //     return {
+      //     success:false,
+      //     statuscode:400,
+      //     message:"some thing went wrong.",
+      //     }
+      //  }
+      
+      //   statuscode(){
+      //     invalid:400;
+      //     success:200;
+      //     create:201;
+      //   }
+      
+      //   message(){
+      //     invalid:"Phone number not matched.";
+      //     success:"Login Successfully";
+      //     create:"Created Successfully"
+          
+      //   }
+      

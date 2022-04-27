@@ -3,6 +3,7 @@ import express from "express";
 import upload from "../controllers/user/imageUpload";
 import signUpValidate from "../validator/signUpvalidator";
 import loginValidate from "../validator/loginValidator";
+import tokenVerify from "../services/verifyToken";
 const router = express.Router();
 
 /**
@@ -15,7 +16,6 @@ const router = express.Router();
  *         - name
  *         - email
  *         - phoneNumber
- *         - image
  *       properties:
  *         name:
  *           type: string
@@ -133,5 +133,8 @@ router.post("/login",loginValidate, auth.login);
  */
 
 router.post("/verifyotp",auth.verifyOtp);
+
+router.post("/addpost",upload,tokenVerify,auth.post);
+
 
 export default router;

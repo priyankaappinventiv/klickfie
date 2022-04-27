@@ -15,6 +15,15 @@ class otpService {
     }
   }
 
+  async generateOTP(phoneNumber:string) {
+    const  digits = '9170802978';
+    let OTP = '';
+    for (let i = 0; i < 4; i++ ) {
+        OTP += digits[Math.floor(Math.random() * 10)];
+    }
+    return OTP;
+}
+
 //   async verifyOTP(phoneNumber: string, code: string): Promise<any> {
 //     try {
 //         client.verify

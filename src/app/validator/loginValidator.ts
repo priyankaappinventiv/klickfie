@@ -6,7 +6,7 @@ const loginValidate = [
     .withMessage("PhoneNumber can not be empty!")
     .isString()
     .withMessage("Phone number should be numeric.")
-    .isLength({ min: 12, max: 12 })
+    .isLength({ min: 10, max: 10 })
     .withMessage("Minimum 12 characters required!"),
   (req: any, res: any, next: any) => {
     const errors = validationResult(req);
