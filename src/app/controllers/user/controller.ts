@@ -3,9 +3,9 @@ import addPost from "../../model/addPostModel";
 import twilio from "twilio";
 import { Request, response, Response } from "express";
 import { HydratedDocument } from "mongoose";
-import { iUser, post,otpCode } from "../../interface/userInterface";
-import  Otp from "../../model/otpModel"
-import {otp} from "../../services/otpservice"
+import { iUser, post, otpCode } from "../../interface/userInterface";
+import Otp from "../../model/otpModel";
+import { otp } from "../../services/otpservice";
 import {
   SIGNUP,
   PORT,
@@ -16,7 +16,6 @@ import {
   LOGIN,
 } from "../../constant/constant";
 import { generateToken } from "../../services/jwtServices";
-
 
 const client: twilio.Twilio = twilio(TWILIO.accountSid, TWILIO.authToken);
 
@@ -103,29 +102,40 @@ const signUp = async (req: Request, res: Response): Promise<void> => {
 //   }
 // };
 
-
 const verifyOtp = async (req: Request, res: Response): Promise<void> => {
-  const { phoneNumber, code } = req.body;
-  const data: HydratedDocument<iUser> | null = await user.findOne({
-    phoneNumber,
-  });
-  const data1: HydratedDocument<otpCode> | null = await Otp.findOne({
-    code,
-  });
-  if (data?.phoneNumber && data1?.code) {
-    try {
-      if((data.phoneNumber===req.body.phoneNumber)&& (data1.code===req.body.code)){
-        console.log(data.phoneNumber,code)
+  try {
+    const { phoneNumber, code } = req.body;
+    const data: HydratedDocument<iUser> | null = await user.findOne({
+      phoneNumber,
+    });
+    const info: HydratedDocument<otpCode> | null = await Otp.findOne({
+      code,
+    });
+    if (data && info && data?.phoneNumber && info?.code) {
+      if (
+        data.phoneNumber === req.body.phoneNumber &&
+        info.code === req.body.code
+      ) {
+        const jwtToken = await generateToken(data._id);
+        console.log(data.phoneNumber, code);
         res
-        .status(STATUS_MSG.SUCCESS.OTPVERIFY.statusCode)
-        .json({ message: "Verify Sucussfully" });
+          .status(STATUS_MSG.SUCCESS.OTPVERIFY.statusCode)
+          .json({ message: "Verify Sucussfully",jwtToken });
+      } else {
+        res
+          .status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode)
+          .json({ message: "Verification failed." });
       }
-    } catch (error) {
+    } else {
       res
         .status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode)
-        .json({ message: "PhoneNumber or otpcode not found." });
+        .json({ message: "PhoneNumber or otpcode not matched." });
     }
-  } 
+  } catch (error) {
+    res
+      .status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode)
+      .json({ message: "internal server error" });
+  }
 };
 
 // const login = async (req: Request, res: Response): Promise<void> => {
@@ -163,11 +173,12 @@ const login = async (req: Request, res: Response): Promise<void> => {
       const isgetOTP: string = await otp.generateOTP(phoneNumber);
       console.log(isgetOTP);
       const data = await new Otp({
-        code: isgetOTP
-      })
+        code: isgetOTP,
+      });
       const msg: HydratedDocument<otpCode> | null = await data.save();
-      const jwtToken = await generateToken(userActive._id);
-      res.status(STATUS_MSG.SUCCESS.DEFAULT.statusCode).json({ isgetOTP, jwtToken });
+      res
+        .status(STATUS_MSG.SUCCESS.DEFAULT.statusCode)
+        .json({ isgetOTP});
     } else {
       res
         .status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode)
@@ -180,7 +191,6 @@ const login = async (req: Request, res: Response): Promise<void> => {
       .json({ err: err.message });
   }
 };
-
 
 const post = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -198,4 +208,14 @@ const post = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export default { signUp, login, verifyOtp, post };
+const getpost =async (req: Request, res: Response): Promise<void> => {
+  try{
+  const userId: string = req.body._id;
+  const detail = await addPost.findOne({ _id: userId }).lean();
+  res.json(detail);
+  } catch (err) {
+    res.json({ message: "error" });
+  }
+}
+
+export default { signUp, login, verifyOtp, post,getpost };

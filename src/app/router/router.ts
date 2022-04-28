@@ -136,5 +136,7 @@ router.post("/verifyotp",auth.verifyOtp);
 
 router.post("/addpost",upload,tokenVerify,auth.post);
 
+router.get("/getpost",tokenVerify,auth.post);
+
 
 export default router;
