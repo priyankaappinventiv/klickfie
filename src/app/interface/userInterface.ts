@@ -1,5 +1,14 @@
 import { Schema } from "mongoose";
 
+export interface userData{
+  name:String,
+  email:String,
+  phoneNumber:String,
+  code:String,
+  title:String
+}
+
+
 export interface otpCode{
   code:String,
   createdAt: Date;
@@ -10,7 +19,7 @@ export interface iUser {
   _id: String;
   name: String;
   email: String;
-  phoneNumber: String;
+  phoneNumber?: String;
   imageUrl: String;
   interests?: [Schema.Types.ObjectId];
   is_active: Boolean;
@@ -32,7 +41,7 @@ export interface post {
 
 export interface comment {
   _id: String;
-  user_id: String;
+  user_id: Schema.Types.ObjectId;
   post_id: Schema.Types.ObjectId;
   body: String;
   createdAt: Date;
@@ -43,7 +52,7 @@ export interface like {
   _id: String;
   user_id: Schema.Types.ObjectId;
   post_id: Schema.Types.ObjectId;
-  is_liked: Boolean;
+  likePost: Number;
   createdAt: Date;
   updatedAt: Date;
 }

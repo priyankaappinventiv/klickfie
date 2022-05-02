@@ -4,7 +4,7 @@ const signUpValidate = [
     .trim()
     .not()
     .isEmpty()
-    .withMessage("name can not be empty!")
+    .withMessage("Name can not be empty!")
     .isAlpha()
     .withMessage("Name should be alpha case.")
     .isLength({ min: 3, max: 15 })

@@ -8,7 +8,7 @@ const tokenVerify = (req: Request, res: Response, next: NextFunction) => {
     return res.send("A token is required for authentication");
   }
   try {
-    req.body.id= jwt.verify(token, key);
+    req.body._id= jwt.verify(token, key);
     return next();
   } catch (err) {
     return res.json("Invalid Token");

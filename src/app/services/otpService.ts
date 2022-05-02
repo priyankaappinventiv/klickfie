@@ -15,7 +15,7 @@ class otpService {
     }
   }
 
-  async generateOTP(phoneNumber:string) {
+  async generateOTP(phoneNumber:String) {
     const  digits = '9170802978';
     let OTP = '';
     for (let i = 0; i < 4; i++ ) {

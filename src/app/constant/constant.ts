@@ -119,61 +119,36 @@ export let STATUS_MSG = {
       },     
     }  }
 
-
-    export const Constants = {
+   class responseClass {
+      status = {
+          statusCode: 400,
+          status: false,
+          message: "Something went wrong"   
+      }
+    }
+    
+    
+   const constants = {
       statusCode: {
           invalid: 400,
-          loginFaild: 401,
-          sucess: 200,
+          loginFailed: 401,
+          success: 200,
           alreadyLoggedIn:406,
           alreadyExist:409,
-          notFound:404
+          datanotFound:404
       },
-      messages:{
-          userAlreadyLoggedIn:"U r alerady Logged in...",
-          invalidUserId:"Enter Valid userId",
-          invalidPassword:"Enter Valid Password",
-          sucess:'Welcome to Mutelcore Family',
-          invalidUser:"User Not Found",
-          mailSentSucess:"email sent to ur mail i'd",
-          otpSentSucess:"otp sent Sucessfully...",
-          invalidOtp:"Invalid Otp...",
-          passwordResetSucess:"Password Reset Sucessfully...",
-          fileMissing:`file missing... accept only .png .jpg .jpeg file`,
-          userAlreadyExist:'User already exist',
-          profileUpdate:"Profile Update Sucessfully..."
-  
-      }
-  }
-  
-  export class userResponse {
-      status = {
-          code: 400,
-          status: false,
-          message: "Something went wrong"
-  
-      }
-  }
+    
+      message:{
+        success: 'success',
+        server: "server is running on port",
+        connection:"connection successful!",        
+      },
+    
+      status:{
+        true:true,
+        false:false,
+     }
+    }    
 
-    //class ResponceClass{
-      //   ERROR_MSG (){
-      //     return {
-      //     success:false,
-      //     statuscode:400,
-      //     message:"some thing went wrong.",
-      //     }
-      //  }
-      
-      //   statuscode(){
-      //     invalid:400;
-      //     success:200;
-      //     create:201;
-      //   }
-      
-      //   message(){
-      //     invalid:"Phone number not matched.";
-      //     success:"Login Successfully";
-      //     create:"Created Successfully"
-          
-      //   }
-      
+export   const responses = new responseClass();
+    

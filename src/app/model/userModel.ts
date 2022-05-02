@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Schema, model, connect } from "mongoose";
+import { Schema} from "mongoose";
 import { iUser } from "../interface/userInterface";
 const Model_Name = "user";
 
@@ -16,8 +16,7 @@ const userSchema = new Schema<iUser>(
     },
     phoneNumber: {
       type: String,
-      unique: true,
-      require: true,
+      unique:true,
     },
     imageUrl: {
       type: String,

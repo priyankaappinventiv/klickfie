@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Schema, model, connect } from "mongoose";
+import { Schema} from "mongoose";
 import { post } from "../interface/userInterface";
 const Model_Name = "addPost";
 
