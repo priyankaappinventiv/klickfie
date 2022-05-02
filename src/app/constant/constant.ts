@@ -123,14 +123,15 @@ export let STATUS_MSG = {
       status = {
           statusCode: 400,
           status: false,
-          message: "Something went wrong"   
+          message: "Something went wrong",
       }
     }
     
     
-   const constants = {
+ export  const constant = {
       statusCode: {
           invalid: 400,
+          serverError:500,
           loginFailed: 401,
           success: 200,
           alreadyLoggedIn:406,
@@ -141,13 +142,16 @@ export let STATUS_MSG = {
       message:{
         success: 'success',
         server: "server is running on port",
-        connection:"connection successful!",        
+        connection:"connection successful!", 
+        signUp:"User already exist.", 
+        loginInvalidMsg:"Phone Number not matched.",
+        loginFailed: "Phone number not matched or user profile is inactive.",
+        authenticationFailed: "Verification failed.",
+        invalidNumber:"Phone Number or otpcode not matched.",
+        serverError: "internal server error"
+
       },
     
-      status:{
-        true:true,
-        false:false,
-     }
     }    
 
 export   const responses = new responseClass();

@@ -1,6 +1,5 @@
 import auth from "../controllers/userController";
 import express from "express";
-import upload from "../controllers/imageUpload";
 import signUpValidate from "../validator/signUpvalidator";
 import loginValidate from "../validator/loginValidator";
 import tokenVerify from "../services/verifyToken";
@@ -26,15 +25,14 @@ const router = express.Router();
  *         phoneNumber:
  *           type: Number
  *           description: phone Number
- *         image:
- *           type: file
- *           key: image
+ *         imageUrl:
+ *           type: string
  *           description: image Url
  *       example:
  *         name: priyankapatel
  *         email: priyankapatel@gmail.com
- *         phoneNumber: 9170802978
- *         iamgeurl: "http://localhost:3009/file_1649397216117.png"
+ *         phoneNumber: "9170802978"
+ *         iamgeUrl: "http://localhost:3009/file_1649397216117.png"
  *
  */
 
@@ -47,7 +45,7 @@ const router = express.Router();
  *      requestBody:
  *          required: true
  *          content:
- *              multipart/form-data:
+ *              application/json:
  *                  schema:
  *                      $ref: '#components/schemas/signUpDataModel'
  *      responses:
@@ -55,7 +53,7 @@ const router = express.Router();
  *              description: Data inserted.
  */
 
-router.post("/signUp", upload, signUpValidate, auth.signUp);
+router.post("/signUp", signUpValidate, auth.signUp);
 
 /**
  * @swagger
@@ -147,8 +145,7 @@ router.post("/verifyOtp",auth.verifyOtp);
  *           type: string
  *           description: Title
  *         image:
- *           type: file
- *           key: image
+ *           type: string
  *           description: image Url
  *       example:
  *         title: This is my post.
@@ -165,7 +162,7 @@ router.post("/verifyOtp",auth.verifyOtp);
  *      requestBody:
  *          required: true
  *          content:
- *              multipart/form-data:
+ *              application/json:
  *                  schema:
  *                      $ref: '#components/schemas/addPostDataModel'
  *      responses:
@@ -175,7 +172,7 @@ router.post("/verifyOtp",auth.verifyOtp);
 
 
 
-router.post("/addPost",upload,tokenVerify,auth.addPosts);
+router.post("/addPost",tokenVerify,auth.addPosts);
 
 /**
  * @swagger

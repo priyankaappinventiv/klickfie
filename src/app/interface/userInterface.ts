@@ -4,6 +4,7 @@ export interface userData{
   name:String,
   email:String,
   phoneNumber:String,
+  imageUrl:String,
   code:String,
   title:String
 }
