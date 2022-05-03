@@ -19,10 +19,10 @@ import { SIGNUP, STATUS_MSG, responses, constant } from "../constant/constant";
 
 const signUp = async (req: Request, res: Response): Promise<void> => {
   try{
-  const { name, email, phoneNumber, imageUrl }: userData = req.body;
-  const userExist: HydratedDocument<iUser> | null = await user.findOne({
-    email
-  });
+   const { name, email, phoneNumber, imageUrl }: userData = req.body;
+   const userExist: HydratedDocument<iUser> | null = await user.findOne({
+    email,phoneNumber
+   });
     if (userExist) {
       responses.status.statusCode = 400;
       responses.status.status = false;
@@ -43,8 +43,8 @@ const signUp = async (req: Request, res: Response): Promise<void> => {
       res.status(constant.statusCode.success).json(responses);
     }
   } catch (err) {
-    responses.status.statusCode = 400;
-    responses.status.message = constant.message.signUp;
+    responses.status.statusCode = 406;
+    responses.status.message = constant.message.signUpFail;
     responses.status.status = false;
     res.status(constant.statusCode.alreadyLoggedIn).json(responses);
   }

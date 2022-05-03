@@ -124,7 +124,7 @@ export let STATUS_MSG = {
 
 
 
-    
+
    class responseClass {
       status = {
           statusCode: 400,
@@ -149,7 +149,8 @@ export let STATUS_MSG = {
         success: 'success',
         server: "server is running on port",
         connection:"connection successful!", 
-        signUp:"User already exist.", 
+        signUp:"User already exist.",
+        signUpFail:"This email or phonenumber allready exist.", 
         loginInvalidMsg:"Phone Number not matched.",
         loginFailed: "Phone number not matched or user profile is inactive.",
         authenticationFailed: "Verification failed.",
