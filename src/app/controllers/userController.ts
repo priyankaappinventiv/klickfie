@@ -18,12 +18,11 @@ import postComment from "../model/commentModel";
 import { SIGNUP, STATUS_MSG, responses, constant } from "../constant/constant";
 
 const signUp = async (req: Request, res: Response): Promise<void> => {
+  try{
   const { name, email, phoneNumber, imageUrl }: userData = req.body;
   const userExist: HydratedDocument<iUser> | null = await user.findOne({
-    email,
-    phoneNumber,
+    email
   });
-  try {
     if (userExist) {
       responses.status.statusCode = 400;
       responses.status.status = false;
