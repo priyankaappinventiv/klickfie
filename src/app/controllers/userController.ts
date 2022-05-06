@@ -37,10 +37,10 @@ const signUp = async (req: Request, res: Response): Promise<void> => {
       });
       const data: HydratedDocument<iUser> | null = await User.save();
       const jwtToken = await generateToken(data._id);
-      responses.status.message = jwtToken;
+      responses.status.message = constant.message.signUpMsg;
       responses.status.statusCode = 200;
       responses.status.status = true;
-      res.status(constant.statusCode.success).json(responses);
+      res.status(constant.statusCode.success).json({responses,data:jwtToken});
     }
   } catch (err) {
     responses.status.statusCode = 406;
@@ -139,9 +139,54 @@ const addPosts = async (req: Request, res: Response): Promise<void> => {
 
 const getPost = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId: string = req.body._id;
-    const detail = await addPost.findOne({ _id: userId });
-    res.json(detail);
+    //const userId: string = req.body._id._id;
+    // const detail = await addPost.findOne({ user_id: userId }).lean();
+    // res.json(detail);
+ 
+    const data= await addPost.aggregate([
+
+      // Join with user_info table
+      {
+          $lookup:{
+              from: "like",       // other table name
+              localField: "userId",   // name of users table field
+              foreignField: "userId", // name of userinfo table field
+              as: "Like"         // alias for userinfo table
+          }
+      },
+      {   $unwind:"$Like" },     // $unwind used for getting data in object or for one record only
+  
+      // Join with user_role table
+      {
+          $lookup:{
+              from: "comment", 
+              localField: "userId", 
+              foreignField: "userId",
+              as: "Comment"
+          }
+      },
+      {   $unwind:"$Comment" },
+  
+      // define some conditions here 
+      {
+          $match:{
+              $and:[{"title" : "This is my 1st post."}]
+          }
+      },
+  
+      // define which fields are you want to fetch
+      {   
+        $project:{
+            _id : 1,
+            title : 1,
+            imageUrl : 1,
+            likePost : "Like.likePost",
+            body:"Comment.body"
+        } 
+    }
+]);
+res.json(data);
+
   } catch (err) {
     res.json({ message: "error" });
   }

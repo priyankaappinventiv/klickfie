@@ -130,6 +130,7 @@ export let STATUS_MSG = {
           statusCode: 400,
           status: false,
           message: "Something went wrong",
+        
       }
     }
     
@@ -148,7 +149,8 @@ export let STATUS_MSG = {
       message:{
         success: 'success',
         server: "server is running on port",
-        connection:"connection successful!", 
+        connection:"connection successful!",
+        signUpMsg:"Signup successful!", 
         signUp:"User already exist.",
         signUpFail:"This email or phonenumber allready exist.", 
         loginInvalidMsg:"Phone Number not matched.",

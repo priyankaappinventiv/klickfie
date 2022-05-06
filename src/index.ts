@@ -69,7 +69,7 @@ app.listen(`${baseUrl}`, () => {
 
 //   await client.connect();
 
-//   await client.set('name', 'Abhay');
+//   await client.set('name', 'priyanka');
 //   const redisvalue = await client.get('name');
 //   console.log(redisvalue);
 // })();
