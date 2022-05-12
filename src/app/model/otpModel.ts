@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-import { otpCode } from "../interface/userInterface";
+import { otpCode } from "../interface/otpInterface";
 const Model_Name = "Otp";
 
 const otpSchema = new Schema<otpCode>(

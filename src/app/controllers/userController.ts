@@ -1,33 +1,26 @@
 import user from "../model/userModel";
-import addPost from "../model/addPostModel";
 import { Request, Response } from "express";
 import { HydratedDocument } from "mongoose";
-import {
-  iUser,
-  post,
-  otpCode,
-  like,
-  comment,
-  userData,
-} from "../interface/userInterface";
+import { iUser, userData } from "../interface/userInterface";
+import { otpCode } from "../interface/otpInterface";
 import Otp from "../model/otpModel";
 import { otp } from "../services/otpService";
 import { generateToken } from "../services/jwtServices";
-import likePost from "../model/likeModel";
-import postComment from "../model/commentModel";
-import { SIGNUP, STATUS_MSG, responses, constant } from "../constant/constant";
+import { constant } from "../constant/constant";
+import { responses } from "../helper/response";
 
 const signUp = async (req: Request, res: Response): Promise<void> => {
-  try{
-   const { name, email, phoneNumber, imageUrl }: userData = req.body;
-   const userExist: HydratedDocument<iUser> | null = await user.findOne({
-    email,phoneNumber
-   });
+  try {
+    const { name, email, phoneNumber, imageUrl }: userData = req.body;
+    const userExist: HydratedDocument<iUser> | null = await user.findOne({
+      email,
+      phoneNumber,
+    });
     if (userExist) {
       responses.status.statusCode = 400;
       responses.status.status = false;
       responses.status.message = constant.message.signUp;
-      res.status(constant.statusCode.invalid).json(responses);
+      res.status(constant.statusCode.invalid).json(responses.status);
     } else {
       const User: HydratedDocument<iUser> | null = new user({
         name: name,
@@ -36,17 +29,52 @@ const signUp = async (req: Request, res: Response): Promise<void> => {
         imageUrl: imageUrl,
       });
       const data: HydratedDocument<iUser> | null = await User.save();
-      const jwtToken = await generateToken(data._id);
       responses.status.message = constant.message.signUpMsg;
       responses.status.statusCode = 200;
       responses.status.status = true;
-      res.status(constant.statusCode.success).json({responses,data:jwtToken});
+      res
+        .status(constant.statusCode.success)
+        .json(responses.status);
     }
   } catch (err) {
     responses.status.statusCode = 406;
     responses.status.message = constant.message.signUpFail;
     responses.status.status = false;
-    res.status(constant.statusCode.alreadyLoggedIn).json(responses);
+    res.status(constant.statusCode.alreadyLoggedIn).json( responses.status);
+  }
+};
+
+const login = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { phoneNumber }: userData = req.body;
+    const userActive: HydratedDocument<iUser> | null = await user.findOne({
+      phoneNumber,
+      is_active: true,
+    });
+    if (userActive) {
+      const otpCode: string = await otp.generateOTP(phoneNumber);
+      const data = new Otp({
+        code: otpCode,
+      });
+      const msg: HydratedDocument<otpCode> | null = await data.save();
+      const code = otpCode;
+      responses.status.statusCode = 200;
+      responses.status.status = true;
+      responses.status.message = constant.message.otpMsg;
+      res
+        .status(constant.statusCode.success)
+        .json({...responses.status, code: otpCode} );
+    } else {
+      responses.status.message = constant.message.loginInvalidMsg;
+      responses.status.statusCode = 400;
+      responses.status.status = false;
+      res.status(constant.statusCode.invalid).json(responses.status);
+    }
+  } catch (err: any) {
+    responses.status.message = constant.message.loginFailed;
+    responses.status.statusCode = 401;
+    responses.status.status = false;
+    res.status(constant.statusCode.loginFailed).json(responses.status);
   }
 };
 
@@ -69,12 +97,15 @@ const verifyOtp = async (req: Request, res: Response): Promise<void> => {
         responses.status.message = jwtToken;
         responses.status.statusCode = 200;
         responses.status.status = true;
-        res.status(constant.statusCode.success).json(responses);
+        responses.status.message = constant.message.verifyMsg;
+        res
+          .status(constant.statusCode.success)
+          .json({...responses.status, data: jwtToken });
       } else {
         responses.status.statusCode = 400;
         responses.status.message = constant.message.authenticationFailed;
         responses.status.status = false;
-        res.status(constant.statusCode.invalid).json(responses);
+        res.status(constant.statusCode.invalid).json(responses.status);
       }
     } else {
       responses.status.statusCode = 400;
@@ -90,189 +121,71 @@ const verifyOtp = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-const login = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { phoneNumber }: userData = req.body;
-    const userActive: HydratedDocument<iUser> | null = await user.findOne({
-      phoneNumber,
-      is_active: true,
-    });
-    if (userActive) {
-      const otpCode: string = await otp.generateOTP(phoneNumber);
-      const data = new Otp({
-        code: otpCode,
-      });
-      const msg: HydratedDocument<otpCode> | null = await data.save();
-      responses.status.message = otpCode;
-      responses.status.statusCode = 200;
-      responses.status.status = true;
-      res.status(constant.statusCode.success).json(responses);
-    } else {
-      responses.status.message = constant.message.loginInvalidMsg;
-      responses.status.statusCode = 400;
-      responses.status.status = false;
-      res.status(constant.statusCode.invalid).json(responses);
-    }
-  } catch (err: any) {
-    responses.status.message = constant.message.loginFailed;
-    responses.status.statusCode = 401;
-    responses.status.status = false;
-    res.status(constant.statusCode.loginFailed).json({ responses });
-  }
-};
-
-const addPosts = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const userId: string = req.body._id;
-    const { title, imageUrl }: userData = req.body;
-    const userPost: HydratedDocument<post> | null = new addPost({
-      user_id: userId,
-      title: title,
-      imageUrl: imageUrl,
-    });
-    const data: HydratedDocument<post> | null = await userPost.save();
-    res.status(200).json({ message: " Post uploaded " });
-  } catch (err: any) {
-    console.log(err);
-  }
-};
-
-const getPost = async (req: Request, res: Response): Promise<void> => {
-  try {
-    //const userId: string = req.body._id._id;
-    // const detail = await addPost.findOne({ user_id: userId }).lean();
-    // res.json(detail);
- 
-    const data= await addPost.aggregate([
-
-      // Join with user_info table
-      {
-          $lookup:{
-              from: "like",       // other table name
-              localField: "userId",   // name of users table field
-              foreignField: "userId", // name of userinfo table field
-              as: "Like"         // alias for userinfo table
-          }
-      },
-      {   $unwind:"$Like" },     // $unwind used for getting data in object or for one record only
-  
-      // Join with user_role table
-      {
-          $lookup:{
-              from: "comment", 
-              localField: "userId", 
-              foreignField: "userId",
-              as: "Comment"
-          }
-      },
-      {   $unwind:"$Comment" },
-  
-      // define some conditions here 
-      {
-          $match:{
-              $and:[{"title" : "This is my 1st post."}]
-          }
-      },
-  
-      // define which fields are you want to fetch
-      {   
-        $project:{
-            _id : 1,
-            title : 1,
-            imageUrl : 1,
-            likePost : "Like.likePost",
-            body:"Comment.body"
-        } 
-    }
-]);
-res.json(data);
-
-  } catch (err) {
-    res.json({ message: "error" });
-  }
-};
-
-const postLikes = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const userId: string = req.body._id;
-    const postId: HydratedDocument<post> | null = await addPost.findOne({
-      userId,
-    });
-    const info: HydratedDocument<like> | null = new likePost({
-      user_id: userId,
-      post_id: postId?._id,
-      likePost: req.body.likePost,
-    });
-    const data: HydratedDocument<like> | null = await info.save();
-    res.status(200).json({ message: "Post liked." });
-  } catch (err: any) {
-    console.log(err);
-  }
-};
-
-const commentPost = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const userId: string = req.body._id;
-    const postId: HydratedDocument<post> | null = await addPost.findOne({
-      userId,
-    });
-    const data: HydratedDocument<comment> | null = new postComment({
-      user_id: userId,
-      post_id: postId?._id,
-      body: req.body.body,
-    });
-    const info: HydratedDocument<comment> | null = await data.save();
-    res.status(200).json({ message: "Post Commented." });
-  } catch (err: any) {
-    console.log(err);
-  }
-};
-
 const socialMediaFb = async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email }: userData = req.body;
     const userExist: HydratedDocument<iUser> | null = await user.findOne({
       email,
-      name,
     });
     if (userExist) {
-      res
-        .status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode)
-        .json({ error: SIGNUP.error });
+      responses.status.statusCode = 400;
+      responses.status.status = false;
+      responses.status.message = constant.message.signUp;
+      res.status(constant.statusCode.invalid).json(responses.status);
     } else {
       const User: HydratedDocument<iUser> | null = new user({
         name: name,
         email: email,
       });
       const data: HydratedDocument<iUser> | null = await User.save();
-      res.status(200).json({ message: "Signup successfully" });
+      responses.status.message = constant.message.signUpMsg;
+      responses.status.statusCode = 200;
+      responses.status.status = true;
+      res
+        .status(constant.statusCode.success)
+        .json(responses.status);
     }
-  } catch (err) {
-    res.json(err);
+  } catch (err: any) {
+    console.log(err);
+    responses.status.message = constant.message.serverError;
+    responses.status.statusCode = 500;
+    responses.status.status = false;
+    res.status(constant.statusCode.serverError).json(responses.status);
   }
 };
 
-const socialMediaGoogle = async (req: Request,res: Response): Promise<void> => {
+const socialMediaGoogle = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const { name, email }: userData = req.body;
     const userExist: HydratedDocument<iUser> | null = await user.findOne({
       email,
-      name,
     });
     if (userExist) {
-      res
-        .status(STATUS_MSG.ERROR.BAD_REQUEST.statusCode)
-        .json({ error: SIGNUP.error });
+      responses.status.statusCode = 400;
+      responses.status.status = false;
+      responses.status.message = constant.message.signUp;
+      res.status(constant.statusCode.invalid).json( responses.status);
     } else {
       const User: HydratedDocument<iUser> | null = new user({
         name: name,
         email: email,
       });
       const data: HydratedDocument<iUser> | null = await User.save();
-      res.status(200).json({ message: "Signup successfully" });
+      responses.status.message = constant.message.signUpMsg;
+      responses.status.statusCode = 200;
+      responses.status.status = true;
+      res
+        .status(constant.statusCode.success)
+        .json(responses.status);
     }
-  } catch (err) {
-    res.json(err);
+  } catch (err: any) {
+    responses.status.message = constant.message.serverError;
+    responses.status.statusCode = 500;
+    responses.status.status = false;
+    res.status(constant.statusCode.serverError).json(responses.status);
   }
 };
 
@@ -280,10 +193,6 @@ export default {
   signUp,
   login,
   verifyOtp,
-  addPosts,
-  getPost,
-  postLikes,
-  commentPost,
   socialMediaFb,
   socialMediaGoogle,
 };

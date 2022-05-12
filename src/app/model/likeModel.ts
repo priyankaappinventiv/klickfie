@@ -1,15 +1,11 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-import { like } from "../interface/userInterface";
-const Model_Name = "likeModel";
+import { like } from "../interface/likeInterface";
+const Model_Name = "userLike";
 
 const likeSchema = new Schema<like>(
   {
     user_id: {
-      type: Schema.Types.ObjectId,
-      require: true,
-    },
-    post_id: {
       type: Schema.Types.ObjectId,
       require: true,
     },
@@ -23,6 +19,6 @@ const likeSchema = new Schema<like>(
   { timestamps: true }
 );
 
-const likePost = mongoose.model<like>(Model_Name, likeSchema);
+const userLike = mongoose.model<like>(Model_Name, likeSchema);
 
-export default likePost;
+export default userLike;

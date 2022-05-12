@@ -16,11 +16,9 @@ const userSchema = new Schema<iUser>(
     },
     phoneNumber: {
       type: String,
-      unique:true,
     },
     imageUrl: {
       type: String,
-      require: true,
     },
     is_active: {
       type: Boolean,

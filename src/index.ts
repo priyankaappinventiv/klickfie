@@ -1,5 +1,5 @@
 import express from "express";
-import dbConnection from "./app/dbConnection/dbConnect";
+import dbConnection from "./app/dbConnection/dbConnection";
 import router from "./app/router/router";
 import user from "./app/model/userModel";
 import swaggerJSdoc from "swagger-jsdoc";

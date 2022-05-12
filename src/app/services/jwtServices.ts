@@ -1,6 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { STATUS_MSG } from "../constant/constant";
-import { Request, Response, NextFunction } from "express";
+import { responses } from "../helper/response";
 const key: string = String(process.env.JWTSECRET);
 
 export function generateToken(_id:Object): Promise<string> {
@@ -9,7 +8,7 @@ export function generateToken(_id:Object): Promise<string> {
       return Promise.resolve(token);
   }
   catch (err: any) {
-      return Promise.reject(STATUS_MSG.ERROR.BAD_REQUEST.message);
+      return Promise.reject(responses.status);
   }
 }
 

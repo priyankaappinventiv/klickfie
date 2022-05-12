@@ -1,8 +1,10 @@
-import auth from "../controllers/userController";
+import authUser from "../controllers/userController";
+import authMovies from "../controllers/moviesController";
 import express from "express";
 import signUpValidate from "../validator/signUpvalidator";
 import loginValidate from "../validator/loginValidator";
 import tokenVerify from "../services/verifyToken";
+import authPost from "../controllers/postController";
 const router = express.Router();
 
 /**
@@ -41,6 +43,8 @@ const router = express.Router();
  * /signUp:
  *  post:
  *      summary: Used to insert data in database
+ *      tags:
+ *          - OnBoarding API's
  *      description: user
  *      requestBody:
  *          required: true
@@ -53,7 +57,7 @@ const router = express.Router();
  *              description: Data inserted.
  */
 
-router.post("/signUp", signUpValidate, auth.signUp);
+router.post("/signUp", signUpValidate, authUser.signUp);
 
 /**
  * @swagger
@@ -77,6 +81,8 @@ router.post("/signUp", signUpValidate, auth.signUp);
  * /login:
  *  post:
  *      summary: Used to login user.
+ *      tags:
+ *          - OnBoarding API's
  *      description: user
  *      requestBody:
  *          required: true
@@ -89,7 +95,7 @@ router.post("/signUp", signUpValidate, auth.signUp);
  *              description: Login successfully.
  */
 
-router.post("/login",loginValidate, auth.login);
+router.post("/login", loginValidate, authUser.login);
 
 /**
  * @swagger
@@ -118,6 +124,8 @@ router.post("/login",loginValidate, auth.login);
  * /verifyOtp:
  *  post:
  *      summary: Used to verify user is valid or not.
+ *      tags:
+ *          - OnBoarding API's
  *      description: user
  *      requestBody:
  *          required: true
@@ -130,153 +138,7 @@ router.post("/login",loginValidate, auth.login);
  *          description: Get data successfully.
  */
 
-router.post("/verifyOtp",auth.verifyOtp);
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     addPostDataModel:
- *       type: object
- *       required:
- *         - title
- *       properties:
- *         title:
- *           type: string
- *           description: Title
- *         image:
- *           type: string
- *           description: image Url
- *       example:
- *         title: This is my post.
- *         iamgeurl: "http://localhost:3009/file_1649397216117.png"
- *
- */
-
-/**
- * @swagger
- * /addPost:
- *  post:
- *      summary: Used to add post on social media.
- *      description: user
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#components/schemas/addPostDataModel'
- *      responses:
- *          200:
- *              description: Post Uploaded..
- */
-
-
-
-router.post("/addPost",tokenVerify,auth.addPosts);
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     getProfileModel:
- *       type: object
- *       required:
- *         - token
- *       properties:
- *         token:
- *           type: string
- *           description: token
- *       example:
- *         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQzZWU1MTQzN2ZhOTJmODIxM2NlOTQiLCJpYXQiOjE2NDg3MjAwMDYsImV4cCI6MTY0OTkyMDAwNn0.TWgASGsVWIq2qYYTqk9wa0xsIAsCVqWPD0v7qiXZ74k"
- *
- */
-
-/**
- * @swagger
- * /getPost:
- *  get:
- *      summary: Used to get user information.
- *      description: userProfile
- *      responses:
- *        200:
- *          description: Get data successfully.
- */
-
-
-router.get("/getPost",tokenVerify,auth.getPost);
-
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     likePostDataModel:
- *       type: object
- *       properties:
- *         likePost:
- *           type: Number
- *           description: likePost
- *       example:
- *         likePost: 1
- *
- */
-
-/**
- * @swagger
- * /likePost:
- *  post:
- *      summary: Used to like post on socail media.
- *      description: user
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#components/schemas/likePostDataModel'
- *      responses:
- *          200:
- *              description: Post liked.
- */
-
-
-
-router.post("/likePost",tokenVerify,auth.postLikes);
-
-
-/**
- * @swagger
- * components:
- *   schemas:
- *     commentPostDataModel:
- *       type: object
- *       properties:
- *         body:
- *           type: string
- *           description: body
- *       example:
- *         body: This is my 1st comment post on socail media.
- *
- */
-
-/**
- * @swagger
- * /commentPost:
- *  post:
- *      summary: Used to comment post on socail media.
- *      description: user
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#components/schemas/commentPostDataModel'
- *      responses:
- *          200:
- *              description: Comment Posted.
- */
-
-
-router.post("/commentPost",tokenVerify,auth.commentPost);
+router.post("/verifyOtp", authUser.verifyOtp);
 
 /**
  * @swagger
@@ -305,6 +167,8 @@ router.post("/commentPost",tokenVerify,auth.commentPost);
  * /socialMediaFb:
  *  post:
  *      summary: Used to Signup user throgh socail media.
+ *      tags:
+ *          - OnBoarding API's
  *      description: user
  *      requestBody:
  *          required: true
@@ -317,8 +181,7 @@ router.post("/commentPost",tokenVerify,auth.commentPost);
  *              description: Data inserted.
  */
 
-router.post("/socialMediaFb",auth.socialMediaFb);
-
+router.post("/socialMediaFb", authUser.socialMediaFb);
 
 /**
  * @swagger
@@ -347,6 +210,8 @@ router.post("/socialMediaFb",auth.socialMediaFb);
  * /socialMediaGoogle:
  *  post:
  *      summary: Used to Signup user throgh socail media.
+ *      tags:
+ *          - OnBoarding API's
  *      description: user
  *      requestBody:
  *          required: true
@@ -359,8 +224,366 @@ router.post("/socialMediaFb",auth.socialMediaFb);
  *              description: Data inserted.
  */
 
+router.post("/socialMediaGoogle", authUser.socialMediaGoogle);
 
-router.post("/socialMediaGoogle",auth.socialMediaGoogle);
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     addPostDataModel:
+ *       type: object
+ *       required:
+ *         - title
+ *       properties:
+ *         title:
+ *           type: string
+ *           description: Title
+ *         image:
+ *           type: string
+ *           description: image Url
+ *       example:
+ *         title: This is my post.
+ *         iamgeurl: "http://localhost:3009/file_1649397216117.png"
+ *
+ */
 
+/**
+ * @swagger
+ * /addPost:
+ *  post:
+ *      summary: Used to add post on social media.
+ *      tags:
+ *          - User Post API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/addPostDataModel'
+ *      responses:
+ *          200:
+ *              description: Post Uploaded..
+ */
+
+router.post("/addPost", tokenVerify, authPost.addPosts);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     getProfileModel:
+ *       type: object
+ *       required:
+ *         - post_id
+ *       properties:
+ *         post_id:
+ *           type: string
+ *           description: post_id
+ *       example:
+ *         post_id: "627c941368d45828aa944c92"
+ *
+ */
+
+/**
+ * @swagger
+ * /getPost:
+ *  post:
+ *      summary: Used to get user information.
+ *      tags:
+ *          - User Post API's
+ *      description: userProfile
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/getProfileModel'
+ *      responses:
+ *        200:
+ *          description: Get data successfully.
+ */
+
+router.post("/getPost", tokenVerify, authPost.getPostDetails);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     likePostDataModel:
+ *       type: object
+ *       properties:
+ *         likePost:
+ *           type: Number
+ *           description: likePost
+ *       example:
+ *         likePost: 1
+ *
+ */
+
+/**
+ * @swagger
+ * /likePost:
+ *  post:
+ *      summary: Used to like post on socail media.
+ *      tags:
+ *          - User Post API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/likePostDataModel'
+ *      responses:
+ *          200:
+ *              description: Post liked.
+ */
+
+router.post("/likePost", tokenVerify, authPost.postLikes);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     commentPostDataModel:
+ *       type: object
+ *       properties:
+ *         body:
+ *           type: string
+ *           description: body
+ *       example:
+ *         body: This is my 1st comment post on socail media.
+ *
+ */
+
+/**
+ * @swagger
+ * /commentPost:
+ *  post:
+ *      summary: Used to comment post on socail media.
+ *      tags:
+ *          - User Post API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/commentPostDataModel'
+ *      responses:
+ *          200:
+ *              description: Comment Posted.
+ */
+
+router.post("/commentPost", tokenVerify, authPost.commentPost);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     madAboutMoviesDataModel:
+ *       type: object
+ *       required:
+ *         - movieName
+ *         - vedioUrl
+ *         - category
+ *         - token
+ *       properties:
+ *         movieName:
+ *           type: string
+ *           description: Title
+ *         vedioUrl:
+ *           type: string
+ *           description: vedio Url
+ *         category:
+ *           type: string
+ *           description: category name
+ *         token:
+ *           type: string
+ *           description: access token
+ *       example:
+ *         "movieName": "Ham sath sath hai."
+ *         "vedioUrl": "http://localhost:3009/file_1649397216117.png"
+ *         "category": "Action"
+ *
+ */
+
+/**
+ * @swagger
+ * /madAboutMovies:
+ *  post:
+ *      summary: Used to add movies on social media.
+ *      tags:
+ *          - Mad about movies API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/madAboutMoviesDataModel'
+ *      responses:
+ *          200:
+ *              description: Post Uploaded..
+ */
+
+router.post("/madAboutMovies", tokenVerify, authMovies.madAboutMovies);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     textReviewDataModel:
+ *       type: object
+ *       required:
+ *         - like
+ *         - dislike
+ *         - comment
+ *         - title
+ *         - description
+ *         - post_id
+ *       properties:
+ *         like:
+ *           type: string
+ *           description: like
+ *         dislike:
+ *           type: string
+ *           description: dislike
+ *         title:
+ *           type: string
+ *           description: title
+ *         comment:
+ *           type: string
+ *           description: comment
+ *         description:
+ *           type: string
+ *           description: description of post
+ *       example:
+ *         "post_id": "627a43e040d46c7ed815f56a"
+ *         "like": 1
+ *         "dislike": 2
+ *         "title": "The enormous visuality of Atlantis!"
+ *         "comment": "Hye nice post"
+ *         "description": "The enormous visuality."       
+ *
+ */
+
+/**
+ * @swagger
+ * /textReview:
+ *  post:
+ *      summary: Used to add post on social media.
+ *      tags:
+ *          - Mad about movies API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/textReviewDataModel'
+ *      responses:
+ *          200:
+ *              description: Post Uploaded..
+ */
+
+router.post("/textReview", tokenVerify, authMovies.textReview);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     audioReviewDataModel:
+ *       type: object
+ *       required:
+ *         - like
+ *         - dislike
+ *         - comment
+ *         - title
+ *         - audioUrl
+ *         - post_id
+ *       properties:
+ *         like:
+ *           type: string
+ *           description: like
+ *         dislike:
+ *           type: string
+ *           description: dislike
+ *         title:
+ *           type: string
+ *           description: title
+ *         comment:
+ *           type: string
+ *           description: comment
+ *         audioUrl:
+ *           type: string
+ *           description: audioUrl
+ *       example:
+ *         "post_id": "627a43e040d46c7ed815f56a"
+ *         "like": 1
+ *         "dislike": 2
+ *         "title": "The enormous visuality of Atlantis!"
+ *         "comment": "Hye nice post"
+ *         "description": "http://localhost:3009/file_1649397216117.png"       
+ *
+ */
+
+/**
+ * @swagger
+ * /audioReview:
+ *  post:
+ *      summary: Used to add post on social media.
+ *      tags:
+ *          - Mad about movies API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/audioReviewDataModel'
+ *      responses:
+ *          200:
+ *              description: Post Uploaded..
+*/
+
+router.post("/audioReview", tokenVerify, authMovies.audioReview);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     getDetailsDataModel:
+ *       type: object
+ *       required:
+ *         - token
+ *       properties:
+ *         token:
+ *           type: string
+ *           description: token
+ *       example:
+ *         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQzZWU1MTQzN2ZhOTJmODIxM2NlOTQiLCJpYXQiOjE2NDg3MjAwMDYsImV4cCI6MTY0OTkyMDAwNn0.TWgASGsVWIq2qYYTqk9wa0xsIAsCVqWPD0v7qiXZ74k"
+ *
+ */
+
+/**
+ * @swagger
+ * /getMoviesPostDetails:
+ *  get:
+ *      summary: Used to get user information.
+ *      tags:
+ *          - Mad about movies API's
+ *      description: userProfile
+ *      responses:
+ *        200:
+ *          description: Get data successfully.
+ */
+
+router.get(
+  "/getMoviesPostDetails",
+  tokenVerify,
+  authMovies.getMoviesPostDetails
+);
 
 export default router;

@@ -1,15 +1,11 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-import { comment } from "../interface/userInterface";
-const Model_Name = "commentModel";
+import { comment } from "../interface/commentInterface";
+const Model_Name = "userComment";
 
 const commentSchema = new Schema<comment>(
   {
     user_id: {
-      type: Schema.Types.ObjectId,
-      require: true,
-    },
-    post_id: {
       type: Schema.Types.ObjectId,
       require: true,
     },
@@ -22,6 +18,6 @@ const commentSchema = new Schema<comment>(
   { timestamps: true }
 );
 
-const postComment = mongoose.model<comment>(Model_Name, commentSchema);
+const userComment = mongoose.model<comment>(Model_Name, commentSchema);
 
-export default postComment;
+export default userComment;
