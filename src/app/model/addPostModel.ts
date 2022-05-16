@@ -18,7 +18,8 @@ const addPostSchema = new Schema<post>(
     like: [
       { type: Schema.Types.ObjectId,
        ref: "userLike" 
-      }],
+      }
+    ],
     comment: [
       { type: Schema.Types.ObjectId, 
         ref: "userComment" 

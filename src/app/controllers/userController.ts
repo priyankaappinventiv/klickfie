@@ -29,12 +29,18 @@ const signUp = async (req: Request, res: Response): Promise<void> => {
         imageUrl: imageUrl,
       });
       const data: HydratedDocument<iUser> | null = await User.save();
+      const otpCode: string = await otp.generateOTP(phoneNumber);
+      const dataCode = new Otp({
+        code: otpCode,
+      });
+      const msg: HydratedDocument<otpCode> | null = await dataCode.save();
+      const code = otpCode;
       responses.status.message = constant.message.signUpMsg;
       responses.status.statusCode = 200;
       responses.status.status = true;
       res
         .status(constant.statusCode.success)
-        .json(responses.status);
+        .json({...responses.status,OTP:code});
     }
   } catch (err) {
     responses.status.statusCode = 406;
@@ -128,10 +134,10 @@ const socialMediaFb = async (req: Request, res: Response): Promise<void> => {
       email,
     });
     if (userExist) {
-      responses.status.statusCode = 400;
-      responses.status.status = false;
+      responses.status.statusCode = 200;
+      responses.status.status = true;
       responses.status.message = constant.message.signUp;
-      res.status(constant.statusCode.invalid).json(responses.status);
+      res.status(constant.statusCode.success).json(responses.status);
     } else {
       const User: HydratedDocument<iUser> | null = new user({
         name: name,
@@ -164,10 +170,10 @@ const socialMediaGoogle = async (
       email,
     });
     if (userExist) {
-      responses.status.statusCode = 400;
-      responses.status.status = false;
+      responses.status.statusCode = 200;
+      responses.status.status = true;
       responses.status.message = constant.message.signUp;
-      res.status(constant.statusCode.invalid).json( responses.status);
+      res.status(constant.statusCode.success).json( responses.status);
     } else {
       const User: HydratedDocument<iUser> | null = new user({
         name: name,

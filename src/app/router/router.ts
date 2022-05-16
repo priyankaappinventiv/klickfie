@@ -306,6 +306,8 @@ router.post("/addPost", tokenVerify, authPost.addPosts);
 
 router.post("/getPost", tokenVerify, authPost.getPostDetails);
 
+router.get("/getAllPost",authPost.getAllPost);
+
 /**
  * @swagger
  * components:

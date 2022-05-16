@@ -79,6 +79,31 @@ const getPostDetails = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
+const getAllPost = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const data:String = await userPost.find()
+      .lean();
+    if (!data) {
+      responses.status.statusCode = 400;
+      responses.status.status = false;
+      responses.status.message = constant.message.postDetailMsg;
+      res.status(constant.statusCode.success).json(responses.status);
+    } else {
+      // responses.status.statusCode = 200;
+      // responses.status.status = true;
+      // responses.status.message = data;
+      // res.status(constant.statusCode.success).json(responses.status);
+      res.status(200).json(data)
+    }
+  } catch (err) {
+    responses.status.message = constant.message.serverError;
+    responses.status.statusCode = 500;
+    responses.status.status = false;
+    res.status(constant.statusCode.serverError).json(responses.status);
+  }
+};
+
+
 const postLikes = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId: string = req.body._id;
@@ -127,9 +152,11 @@ const commentPost = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+
 export default {
   addPosts,
   getPostDetails,
+  getAllPost,
   postLikes,
   commentPost,
 };
