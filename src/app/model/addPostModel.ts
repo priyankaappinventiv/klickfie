@@ -15,15 +15,13 @@ const addPostSchema = new Schema<post>(
     title: {
       type: String,
     },
-    like: [
-      { type: Schema.Types.ObjectId,
-       ref: "userLike" 
-      }
-    ],
-    comment: [
-      { type: Schema.Types.ObjectId, 
-        ref: "userComment" 
-      }],
+    like:{
+      type: Number,
+      default:0
+    },
+    comment: {
+      type:String
+    },
   },
   { timestamps: true }
 );

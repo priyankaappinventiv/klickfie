@@ -243,7 +243,7 @@ router.post("/socialMediaGoogle", authUser.socialMediaGoogle);
  *           description: image Url
  *       example:
  *         title: This is my post.
- *         iamgeurl: "http://localhost:3009/file_1649397216117.png"
+ *         imageUrl: "http://localhost:3009/file_1649397216117.png"
  *
  */
 
@@ -306,6 +306,28 @@ router.post("/addPost", tokenVerify, authPost.addPosts);
 
 router.post("/getPost", tokenVerify, authPost.getPostDetails);
 
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     getProfileModel:
+ *       type: object
+ *       
+ */
+
+/**
+ * @swagger
+ * /getAllPost:
+ *  get:
+ *      summary: Used to get user information.
+ *      tags:
+ *          - User Post API's
+ *      description: Get all Post Detail
+ *      responses:
+ *        200:
+ *          description: Get data successfully.
+ */
+
 router.get("/getAllPost",authPost.getAllPost);
 
 /**
@@ -314,12 +336,14 @@ router.get("/getAllPost",authPost.getAllPost);
  *   schemas:
  *     likePostDataModel:
  *       type: object
+ *       required:
+ *         - post_id
  *       properties:
- *         likePost:
- *           type: Number
- *           description: likePost
+ *         post_id:
+ *           type: string
+ *           description: post_id
  *       example:
- *         likePost: 1
+ *         post_id: "627c941368d45828aa944c92"
  *
  */
 
@@ -342,7 +366,45 @@ router.get("/getAllPost",authPost.getAllPost);
  *              description: Post liked.
  */
 
-router.post("/likePost", tokenVerify, authPost.postLikes);
+router.post("/likePost",  authPost.postLikes);
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     disLikePostDataModel:
+ *       type: object
+ *       required:
+ *         - post_id
+ *       properties:
+ *         post_id:
+ *           type: string
+ *           description: post_id
+ *       example:
+ *         post_id: "627c941368d45828aa944c92"
+ *
+ */
+
+/**
+ * @swagger
+ * /disLikePost:
+ *  post:
+ *      summary: Used to like post on socail media.
+ *      tags:
+ *          - User Post API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/disLikePostDataModel'
+ *      responses:
+ *          200:
+ *              description: Disliked Post.
+ */
+router.post("/disLikePost",  authPost.disLikePost);
 
 /**
  * @swagger
@@ -352,6 +414,9 @@ router.post("/likePost", tokenVerify, authPost.postLikes);
  *       type: object
  *       properties:
  *         body:
+ *           type: string
+ *           description: body
+ *         post_id:
  *           type: string
  *           description: body
  *       example:

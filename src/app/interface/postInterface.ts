@@ -9,8 +9,8 @@ export interface post {
     imageUrl: String;
     videoUrl?: String;
     title: String;
-    like: [like];
-    comment: [comment];
+    like: Number;
+    comment: String;
     createdAt: Date;
     updatedAt: Date;
   }

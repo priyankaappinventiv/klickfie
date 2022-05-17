@@ -9,6 +9,10 @@ const commentSchema = new Schema<comment>(
       type: Schema.Types.ObjectId,
       require: true,
     },
+    post_id: {
+      type: Schema.Types.ObjectId,
+      require: true,
+    },
     body: {
       type: String,
       require:true,
