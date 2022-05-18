@@ -155,7 +155,10 @@ const postLikes = async (req: Request, res: Response): Promise<any> => {
       userId
     );
     if (!postDetails) {
-      return res.send("Post not found");
+      responses.status.statusCode = 401;
+      responses.status.status = false;
+      responses.status.message = constant.message.likeErrorMsg;
+      res.status(constant.statusCode.success).json(responses.status);
     }
     let postLiked: any = postDetails?.like;
     await userPost.findByIdAndUpdate(
@@ -169,7 +172,10 @@ const postLikes = async (req: Request, res: Response): Promise<any> => {
         new: true,
       }
     );
-    res.send("Post liked...");
+    responses.status.statusCode = 200;
+    responses.status.status = true;
+    responses.status.message = constant.message.likeMsg;
+    res.status(constant.statusCode.success).json( responses.status);
   } catch (err: any) {
     console.log(err);
   }
@@ -183,7 +189,10 @@ const disLikePost = async (req: Request, res: Response): Promise<any> => {
       userId
     );
     if (!postDetails) {
-      return res.send("Post not found");
+      responses.status.statusCode = 401;
+      responses.status.status = false;
+      responses.status.message = constant.message.disLikeErrorMsg;
+      res.status(constant.statusCode.success).json(responses.status);
     }
     let postLiked: any = postDetails?.like;
     await userPost.findByIdAndUpdate(
@@ -197,8 +206,10 @@ const disLikePost = async (req: Request, res: Response): Promise<any> => {
         new: true,
       }
     );
-
-    res.send("Dislike post...");
+    responses.status.statusCode = 200;
+    responses.status.status = true;
+    responses.status.message = constant.message.disLikeMsg;
+    res.status(constant.statusCode.success).json( responses.status);
   } catch (err: any) {
     console.log(err);
   }

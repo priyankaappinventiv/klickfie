@@ -71,8 +71,11 @@ export const constant = {
     postLikeMsg:"Post liked.",
     reviewMsg:"Review successful!",
     postCommentMsg:"Post Commented.",
-    postDetailMsg:"Post id not matched."
-    
+    postDetailMsg:"Post id not matched.",
+    likeMsg:"Post liked...",
+    disLikeMsg:"Disliked post...",
+    likeErrorMsg:"Post not found",
+    disLikeErrorMsg:"Post not found"
   },
 };
 

@@ -34,7 +34,7 @@ const router = express.Router();
  *         name: priyankapatel
  *         email: priyankapatel@gmail.com
  *         phoneNumber: "9170802978"
- *         iamgeUrl: "http://localhost:3009/file_1649397216117.png"
+ *         imageUrl: "http://localhost:3009/file_1649397216117.png"
  *
  */
 
@@ -366,7 +366,7 @@ router.get("/getAllPost",authPost.getAllPost);
  *              description: Post liked.
  */
 
-router.post("/likePost",  authPost.postLikes);
+router.post("/likePost",tokenVerify,  authPost.postLikes);
 
 
 /**
@@ -404,7 +404,7 @@ router.post("/likePost",  authPost.postLikes);
  *          200:
  *              description: Disliked Post.
  */
-router.post("/disLikePost",  authPost.disLikePost);
+router.post("/disLikePost", tokenVerify, authPost.disLikePost);
 
 /**
  * @swagger
@@ -421,6 +421,7 @@ router.post("/disLikePost",  authPost.disLikePost);
  *           description: body
  *       example:
  *         body: This is my 1st comment post on socail media.
+ *         post_id: "627c941368d45828aa944c92"
  *
  */
 
