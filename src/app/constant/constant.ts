@@ -75,7 +75,8 @@ export const constant = {
     likeMsg:"Post liked...",
     disLikeMsg:"Disliked post...",
     likeErrorMsg:"Post not found",
-    disLikeErrorMsg:"Post not found"
+    disLikeErrorMsg:"Post not found",
+    commentMsg:"Page not found"
   },
 };
 

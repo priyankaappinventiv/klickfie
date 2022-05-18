@@ -108,7 +108,7 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
     },
     {
       $project: {
-        user_id: 1,
+        user_id: 10,
         imageUrl: 1,
         title: 1,
         like: 1,
@@ -125,28 +125,6 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
   res.json(allPostDetails);
 };
 
-// const getAllPost = async (req: Request, res: Response): Promise<any> => {
-//   try {
-//     const data: String = await userPost.find().lean();
-//     if (!data) {
-//       responses.status.statusCode = 400;
-//       responses.status.status = false;
-//       responses.status.message = constant.message.postDetailMsg;
-//       res.status(constant.statusCode.success).json(responses.status);
-//     } else {
-//       // responses.status.statusCode = 200;
-//       // responses.status.status = true;
-//       // responses.status.message = data;
-//       // res.status(constant.statusCode.success).json(responses.status);
-//       res.status(200).json(data);
-//     }
-//   } catch (err) {
-//     responses.status.message = constant.message.serverError;
-//     responses.status.statusCode = 500;
-//     responses.status.status = false;
-//     res.status(constant.statusCode.serverError).json(responses.status);
-//   }
-// };
 
 const postLikes = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -215,45 +193,31 @@ const disLikePost = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-// const postLikes = async (req: Request, res: Response): Promise<void> => {
-//   try {
-//     const userId: string = req.body._id;
-//     const info: HydratedDocument<like> | null = new userLike({
-//       user_id: userId,
-//       likePost: req.body.likePost,
-//     });
-//     const data: HydratedDocument<like> | null = await info.save();
-//     await userPost.updateOne(
-//       { _id: req.body.post_id },
-//       { $push: { like: data._id } }
-//     );
-//     responses.status.statusCode = 200;
-//     responses.status.status = true;
-//     responses.status.message = constant.message.postLikeMsg;
-//     res.status(constant.statusCode.success).json(responses.status);
-//   } catch (err: any) {
-//     responses.status.message = constant.message.serverError;
-//     responses.status.statusCode = 500;
-//     responses.status.status = false;
-//     res.status(constant.statusCode.serverError).json( responses.status);
-//   }
-// };
-
 const commentPost = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId: string = req.body._id;
     const postId: string = req.body.post_id;
+    const postDetails: HydratedDocument<post> | null = await userPost.findById(
+      userId
+    );
+    if (!postDetails) {
+      responses.status.statusCode = 401;
+      responses.status.status = false;
+      responses.status.message = constant.message.commentMsg;
+      res.status(constant.statusCode.success).json(responses.status);
+    }else{
     const data: HydratedDocument<comment> | null = new userComment({
       post_id: postId,
       user_id: userId,
       body: req.body.body,
     });
     const info: HydratedDocument<comment> | null = await data.save();
+    console.log("rtyui")
     responses.status.statusCode = 200;
     responses.status.status = true;
     responses.status.message = constant.message.postCommentMsg;
     res.status(constant.statusCode.success).json(responses.status);
-  } catch (err: any) {
+  } }catch (err: any) {
     responses.status.message = constant.message.serverError;
     responses.status.statusCode = 500;
     responses.status.status = false;

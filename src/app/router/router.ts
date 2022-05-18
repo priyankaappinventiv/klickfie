@@ -328,7 +328,7 @@ router.post("/getPost", tokenVerify, authPost.getPostDetails);
  *          description: Get data successfully.
  */
 
-router.get("/getAllPost",authPost.getAllPost);
+router.get("/getAllPost",tokenVerify,authPost.getAllPost);
 
 /**
  * @swagger
