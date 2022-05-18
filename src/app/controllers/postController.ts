@@ -108,7 +108,7 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
     },
     {
       $project: {
-        user_id: 10,
+        user_id: 5,
         imageUrl: 1,
         title: 1,
         like: 1,
