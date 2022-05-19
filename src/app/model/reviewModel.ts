@@ -1,14 +1,10 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
-import { review } from "../interface/reviewInterface";
+import { movie } from "../interface/movieInterface";
 const Model_Name = "Review";
 
-const reviewSchema = new Schema<review>(
+const reviewSchema = new Schema<movie>(
   {
-    user_id: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
-    },
     vedioUrl:{
         type:String
     },
@@ -16,19 +12,11 @@ const reviewSchema = new Schema<review>(
       type: String,
     },    
     category:{
-      type:String
+      type:[String]
     } ,
-    textReview: [
-      { type: Schema.Types.ObjectId,
-       ref: "textMsg" 
-      }],
-    audioReview: [
-      { type: Schema.Types.ObjectId, 
-        ref: "audioMsg" 
-      }], 
   },
   { timestamps: true }
 );
-const Review = mongoose.model<review>(Model_Name, reviewSchema);
+const Review = mongoose.model<movie>(Model_Name, reviewSchema);
 
 export default Review;

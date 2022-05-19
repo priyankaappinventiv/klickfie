@@ -117,14 +117,12 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
         "postCreatedBy.imageUrl": 1,
         totalComments: { $size: "$totalComments" },
         "lastestComment.body": 1,
-        "commentedBy.name": 1
-        
+        "commentedBy.name": 1,
       },
     },
   ]);
   res.json(allPostDetails);
 };
-
 
 const postLikes = async (req: Request, res: Response): Promise<any> => {
   try {
@@ -153,7 +151,7 @@ const postLikes = async (req: Request, res: Response): Promise<any> => {
     responses.status.statusCode = 200;
     responses.status.status = true;
     responses.status.message = constant.message.likeMsg;
-    res.status(constant.statusCode.success).json( responses.status);
+    res.status(constant.statusCode.success).json(responses.status);
   } catch (err: any) {
     console.log(err);
   }
@@ -187,7 +185,7 @@ const disLikePost = async (req: Request, res: Response): Promise<any> => {
     responses.status.statusCode = 200;
     responses.status.status = true;
     responses.status.message = constant.message.disLikeMsg;
-    res.status(constant.statusCode.success).json( responses.status);
+    res.status(constant.statusCode.success).json(responses.status);
   } catch (err: any) {
     console.log(err);
   }
@@ -198,26 +196,26 @@ const commentPost = async (req: Request, res: Response): Promise<void> => {
     const userId: string = req.body._id;
     const postId: string = req.body.post_id;
     const postDetails: HydratedDocument<post> | null = await userPost.findById(
-      userId
+      postId
     );
-    if (!postDetails) {
+    if (postDetails) {
+      const data: HydratedDocument<comment> | null = new userComment({
+        post_id: postId,
+        user_id: userId,
+        body: req.body.body,
+      });
+      const info: HydratedDocument<comment> | null = await data.save();
+      responses.status.statusCode = 200;
+      responses.status.status = true;
+      responses.status.message = constant.message.postCommentMsg;
+      res.status(constant.statusCode.success).json(responses.status);
+    } else {
       responses.status.statusCode = 401;
       responses.status.status = false;
       responses.status.message = constant.message.commentMsg;
       res.status(constant.statusCode.success).json(responses.status);
-    }else{
-    const data: HydratedDocument<comment> | null = new userComment({
-      post_id: postId,
-      user_id: userId,
-      body: req.body.body,
-    });
-    const info: HydratedDocument<comment> | null = await data.save();
-    console.log("rtyui")
-    responses.status.statusCode = 200;
-    responses.status.status = true;
-    responses.status.message = constant.message.postCommentMsg;
-    res.status(constant.statusCode.success).json(responses.status);
-  } }catch (err: any) {
+    }
+  } catch (err: any) {
     responses.status.message = constant.message.serverError;
     responses.status.statusCode = 500;
     responses.status.status = false;

@@ -556,7 +556,7 @@ router.post("/madAboutMovies", tokenVerify, authMovies.madAboutMovies);
  *              description: Post Uploaded..
  */
 
-router.post("/textReview", tokenVerify, authMovies.textReview);
+//router.post("/textReview", tokenVerify, authMovies.textReview);
 
 /**
  * @swagger
@@ -616,7 +616,7 @@ router.post("/textReview", tokenVerify, authMovies.textReview);
  *              description: Post Uploaded..
 */
 
-router.post("/audioReview", tokenVerify, authMovies.audioReview);
+//router.post("/audioReview", tokenVerify, authMovies.audioReview);
 
 /**
  * @swagger
@@ -648,10 +648,10 @@ router.post("/audioReview", tokenVerify, authMovies.audioReview);
  *          description: Get data successfully.
  */
 
-router.get(
-  "/getMoviesPostDetails",
-  tokenVerify,
-  authMovies.getMoviesPostDetails
-);
+// router.get(
+//   "/getMoviesPostDetails",
+//   tokenVerify,
+//   authMovies.getMoviesPostDetails
+// );
 
 export default router;

@@ -29,7 +29,7 @@ export const TWILIO = {
 };
 
 export const JWTEXP = {
-  exp: 2 * 24 * 60 * 1000,
+  exp: 60*1000,
 };
 
 // class responseClass {
@@ -76,7 +76,8 @@ export const constant = {
     disLikeMsg:"Disliked post...",
     likeErrorMsg:"Post not found",
     disLikeErrorMsg:"Post not found",
-    commentMsg:"Page not found"
+    commentMsg:"Page not found",
+    tokenMsg:"A token is required for authentication"
   },
 };
 
