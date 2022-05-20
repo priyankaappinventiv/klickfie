@@ -108,7 +108,7 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
     },
     {
       $project: {
-        user_id: 5,
+        user_id: 1,
         imageUrl: 1,
         title: 1,
         like: 1,
@@ -120,8 +120,11 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
         "commentedBy.name": 1,
       },
     },
+    {
+      $sort: { _id: -1 },
+    },
   ]);
-  res.json(allPostDetails);
+  res.status(200).json(allPostDetails);
 };
 
 const postLikes = async (req: Request, res: Response): Promise<any> => {
@@ -130,28 +133,29 @@ const postLikes = async (req: Request, res: Response): Promise<any> => {
     const postDetails: HydratedDocument<post> | null = await userPost.findById(
       userId
     );
-    if (!postDetails) {
+    if (postDetails) {
+      let postLiked: any = postDetails?.like;
+      await userPost.findByIdAndUpdate(
+        userId,
+        {
+          $set: {
+            like: postLiked === undefined ? 1 : postLiked + 1,
+          },
+        },
+        {
+          new: true,
+        }
+      );
+      responses.status.statusCode = 200;
+      responses.status.status = true;
+      responses.status.message = constant.message.likeMsg;
+      res.status(constant.statusCode.success).json(responses.status);
+    } else {
       responses.status.statusCode = 401;
       responses.status.status = false;
       responses.status.message = constant.message.likeErrorMsg;
       res.status(constant.statusCode.success).json(responses.status);
     }
-    let postLiked: any = postDetails?.like;
-    await userPost.findByIdAndUpdate(
-      userId,
-      {
-        $set: {
-          like: postLiked === undefined ? 1 : postLiked + 1,
-        },
-      },
-      {
-        new: true,
-      }
-    );
-    responses.status.statusCode = 200;
-    responses.status.status = true;
-    responses.status.message = constant.message.likeMsg;
-    res.status(constant.statusCode.success).json(responses.status);
   } catch (err: any) {
     console.log(err);
   }
