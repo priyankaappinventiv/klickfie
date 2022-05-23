@@ -404,7 +404,7 @@ router.post("/likePost",tokenVerify,  authPost.postLikes);
  *          200:
  *              description: Disliked Post.
  */
-router.post("/disLikePost", tokenVerify, authPost.disLikePost);
+//router.post("/disLikePost", tokenVerify, authPost.disLikePost);
 
 /**
  * @swagger

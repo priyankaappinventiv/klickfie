@@ -48,7 +48,7 @@ const addPosts = async (req: Request, res: Response): Promise<void> => {
 
 const getPostDetails = async (req: Request, res: Response): Promise<any> => {
   try {
-    const data: String = await userPost
+    const data: string = await userPost
       .findOne({ _id: req.body.post_id })
       .populate("like")
       .populate("comment")
@@ -60,11 +60,10 @@ const getPostDetails = async (req: Request, res: Response): Promise<any> => {
       responses.status.message = constant.message.postDetailMsg;
       res.status(constant.statusCode.success).json(responses.status);
     } else {
-      // responses.status.statusCode = 200;
-      // responses.status.status = true;
-      // responses.status.message = data;
-      // res.status(constant.statusCode.success).json(responses.status);
-      res.status(200).json(data);
+      responses.status.statusCode = 200;
+      responses.status.status = true;
+      responses.status.message = data;
+      res.status(constant.statusCode.success).json(responses.status);
     }
   } catch (err) {
     responses.status.message = constant.message.serverError;
@@ -129,67 +128,57 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
 
 const postLikes = async (req: Request, res: Response): Promise<any> => {
   try {
-    const userId: any = req.body.post_id;
-    const postDetails: HydratedDocument<post> | null = await userPost.findById(
-      userId
-    );
-    if (postDetails) {
-      let postLiked: any = postDetails?.like;
-      await userPost.findByIdAndUpdate(
-        userId,
-        {
-          $set: {
-            like: postLiked === undefined ? 1 : postLiked + 1,
-          },
-        },
-        {
-          new: true,
-        }
-      );
-      responses.status.statusCode = 200;
-      responses.status.status = true;
-      responses.status.message = constant.message.likeMsg;
-      res.status(constant.statusCode.success).json(responses.status);
-    } else {
+    const postId: any = req.body.post_id;
+    const userId: string = req.body._id;
+    const isUser: HydratedDocument<post> | null = await userPost.findOne({
+      postId,
+      userId,
+    });
+    //console.log(isUser);
+    if (!isUser) {
       responses.status.statusCode = 401;
       responses.status.status = false;
       responses.status.message = constant.message.likeErrorMsg;
       res.status(constant.statusCode.success).json(responses.status);
-    }
-  } catch (err: any) {
-    console.log(err);
-  }
-};
-
-const disLikePost = async (req: Request, res: Response): Promise<any> => {
-  try {
-    const userId: any = req.body.post_id;
-    console.log(userId);
-    const postDetails: HydratedDocument<post> | null = await userPost.findById(
-      userId
-    );
-    if (!postDetails) {
-      responses.status.statusCode = 401;
-      responses.status.status = false;
-      responses.status.message = constant.message.disLikeErrorMsg;
-      res.status(constant.statusCode.success).json(responses.status);
-    }
-    let postLiked: any = postDetails?.like;
-    await userPost.findByIdAndUpdate(
-      userId,
-      {
-        $set: {
-          like: postLiked === undefined ? 1 : postLiked - 1,
-        },
-      },
-      {
-        new: true,
+    } else {
+      if (isUser.isLiked === false) {
+        const postLiked: any = isUser?.like;
+        await userPost.findByIdAndUpdate(
+          postId,
+          {
+            $set: {
+              like: postLiked === undefined ? 1 : postLiked + 1,
+              isLiked: true,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+        responses.status.statusCode = 200;
+        responses.status.status = true;
+        responses.status.message = constant.message.likeMsg;
+        res.status(constant.statusCode.success).json(responses.status);
+      } else {
+        let postLiked: any = isUser?.like;
+        await userPost.findByIdAndUpdate(
+          postId,
+          {
+            $set: {
+              like: postLiked === undefined ? 1 : postLiked - 1,
+              isLiked: false,
+            },
+          },
+          {
+            new: true,
+          }
+        );
+        responses.status.statusCode = 200;
+        responses.status.status = true;
+        responses.status.message = constant.message.disLikeMsg;
+        res.status(constant.statusCode.success).json(responses.status);
       }
-    );
-    responses.status.statusCode = 200;
-    responses.status.status = true;
-    responses.status.message = constant.message.disLikeMsg;
-    res.status(constant.statusCode.success).json(responses.status);
+    }
   } catch (err: any) {
     console.log(err);
   }
@@ -232,6 +221,5 @@ export default {
   getPostDetails,
   getAllPost,
   postLikes,
-  disLikePost,
   commentPost,
 };

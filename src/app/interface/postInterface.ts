@@ -1,7 +1,4 @@
 import { Schema } from "mongoose";
-import { comment } from "./commentInterface";
-import { like } from "./likeInterface";
-
 
 export interface post {
     _id: String;
@@ -11,6 +8,7 @@ export interface post {
     title: String;
     like: Number;
     comment: String;
+    isLiked?:Boolean;
     createdAt: Date;
     updatedAt: Date;
   }

@@ -22,6 +22,10 @@ const addPostSchema = new Schema<post>(
     comment: {
       type:String
     },
+    isLiked: {
+      type: Boolean,
+      default:false
+    },
   },
   { timestamps: true }
 );
