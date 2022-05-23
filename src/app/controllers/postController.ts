@@ -130,11 +130,8 @@ const postLikes = async (req: Request, res: Response): Promise<any> => {
   try {
     const postId: any = req.body.post_id;
     const userId: string = req.body._id;
-    const isUser: HydratedDocument<post> | null = await userPost.findOne({
-      postId,
-      userId,
-    });
-    //console.log(isUser);
+    const isUser: HydratedDocument<post> | null = await userPost.findById(postId);
+   // console.log(isUser);
     if (!isUser) {
       responses.status.statusCode = 401;
       responses.status.status = false;

@@ -622,36 +622,41 @@ router.post("/madAboutMovies", tokenVerify, authMovies.madAboutMovies);
  * @swagger
  * components:
  *   schemas:
- *     getDetailsDataModel:
+ *     getmovieDetailsModel:
  *       type: object
  *       required:
- *         - token
+ *         - post_id
  *       properties:
- *         token:
+ *         post_id:
  *           type: string
- *           description: token
+ *           description: post_id
  *       example:
- *         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MjQzZWU1MTQzN2ZhOTJmODIxM2NlOTQiLCJpYXQiOjE2NDg3MjAwMDYsImV4cCI6MTY0OTkyMDAwNn0.TWgASGsVWIq2qYYTqk9wa0xsIAsCVqWPD0v7qiXZ74k"
+ *         post_id: "627c941368d45828aa944c92"
  *
  */
 
 /**
  * @swagger
- * /getMoviesPostDetails:
- *  get:
- *      summary: Used to get user information.
+ * /getmovieDetails:
+ *  post:
+ *      summary: Used to like post on socail media.
  *      tags:
  *          - Mad about movies API's
- *      description: userProfile
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/getmovieDetailsModel'
  *      responses:
- *        200:
- *          description: Get data successfully.
+ *          200:
+ *              description: Disliked Post.
  */
-
-// router.get(
-//   "/getMoviesPostDetails",
-//   tokenVerify,
-//   authMovies.getMoviesPostDetails
-// );
+router.post(
+  "/getmovieDetails",
+  tokenVerify,
+  authMovies.getmovieDetails
+);
 
 export default router;

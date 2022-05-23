@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 import { movie } from "../interface/movieInterface";
-const Model_Name = "Review";
+const Model_Name = "Movie";
 
 const reviewSchema = new Schema<movie>(
   {
