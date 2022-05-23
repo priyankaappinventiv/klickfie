@@ -1,12 +1,13 @@
 import { HydratedDocument } from "mongoose";
 import { Request, Response } from "express";
-import { userData } from "../interface/userInterface";
+import { iUser, userData } from "../interface/userInterface";
 import { post } from "../interface/postInterface";
 import { comment } from "../interface/commentInterface";
 import { responses } from "../helper/response";
 import { constant } from "../constant/constant";
 import userPost from "../model/addPostModel";
 import userComment from "../model/commentModel";
+import user from "../model/userModel";
 
 const addPosts = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -130,15 +131,15 @@ const postLikes = async (req: Request, res: Response): Promise<any> => {
   try {
     const postId: any = req.body.post_id;
     const userId: string = req.body._id;
+    const is_Liked: HydratedDocument<iUser> | null = await user.findById(userId);
     const isUser: HydratedDocument<post> | null = await userPost.findById(postId);
-   // console.log(isUser);
     if (!isUser) {
       responses.status.statusCode = 401;
       responses.status.status = false;
       responses.status.message = constant.message.likeErrorMsg;
       res.status(constant.statusCode.success).json(responses.status);
     } else {
-      if (isUser.isLiked === false) {
+      if (is_Liked?.isLiked === false) {
         const postLiked: any = isUser?.like;
         await userPost.findByIdAndUpdate(
           postId,

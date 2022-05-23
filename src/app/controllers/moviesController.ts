@@ -26,7 +26,7 @@ const madAboutMovies = async (req: Request, res: Response): Promise<void> => {
     }
   };
 
-  const getmovieDetails = async (req: Request, res: Response): Promise<any> => {
+const getmovieDetails = async (req: Request, res: Response): Promise<any> => {
     try {
       const postId: any = req.body.post_id;
       const data: string|null = await  Movie.findById(postId);
@@ -49,9 +49,27 @@ const madAboutMovies = async (req: Request, res: Response): Promise<void> => {
       res.status(constant.statusCode.serverError).json(responses.status);
     }
   };
-  
 
-
+  const  getAllMovieDetails = async (req: Request, res: Response): Promise<any> => {
+    try {
+      const data: Object= await  Movie.find();
+      console.log(data);
+      if (!data) {
+        responses.status.statusCode = 400;
+        responses.status.status = false;
+        responses.status.message = constant.message.postDetailMsg;
+        res.status(constant.statusCode.success).json(responses.status);
+      } else {
+        res.status(constant.statusCode.success).json({statusCode:200,status:true,data:data});
+      }
+    } catch (err) {
+      responses.status.message = constant.message.serverError;
+      responses.status.statusCode = 500;
+      responses.status.status = false;
+      res.status(constant.statusCode.serverError).json(responses.status);
+    }
+  };
+     
 
 //   const textReview = async (req: Request, res: Response): Promise<void> => {
 //     try {
@@ -249,8 +267,8 @@ const madAboutMovies = async (req: Request, res: Response): Promise<void> => {
 
 export default {
     madAboutMovies,
-    getmovieDetails
-   // audioReview,
+    getmovieDetails,
+    getAllMovieDetails
    // getMoviesPostDetails
 };
   

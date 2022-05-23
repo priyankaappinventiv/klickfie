@@ -24,6 +24,10 @@ const userSchema = new Schema<iUser>(
       type: Boolean,
       default: true,
     },
+    isLiked: {
+      type: Boolean,
+      default: false,
+    },
   },
 
   { timestamps: true }

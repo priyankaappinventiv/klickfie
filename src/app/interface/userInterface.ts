@@ -6,7 +6,8 @@ export interface userData{
   phoneNumber:String,
   imageUrl:String,
   code:String,
-  title:String
+  title:String,
+  isLiked:Boolean
 }
 
 export interface iUser {
@@ -17,6 +18,7 @@ export interface iUser {
   imageUrl: String;
   interests?: [Schema.Types.ObjectId];
   is_active: Boolean;
+  isLiked?:Boolean;
   createdAt: Date;
   updatedAt: Date;
 }

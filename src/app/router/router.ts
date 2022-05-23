@@ -373,43 +373,6 @@ router.post("/likePost",tokenVerify,  authPost.postLikes);
  * @swagger
  * components:
  *   schemas:
- *     disLikePostDataModel:
- *       type: object
- *       required:
- *         - post_id
- *       properties:
- *         post_id:
- *           type: string
- *           description: post_id
- *       example:
- *         post_id: "627c941368d45828aa944c92"
- *
- */
-
-/**
- * @swagger
- * /disLikePost:
- *  post:
- *      summary: Used to like post on socail media.
- *      tags:
- *          - User Post API's
- *      description: user
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#components/schemas/disLikePostDataModel'
- *      responses:
- *          200:
- *              description: Disliked Post.
- */
-//router.post("/disLikePost", tokenVerify, authPost.disLikePost);
-
-/**
- * @swagger
- * components:
- *   schemas:
  *     commentPostDataModel:
  *       type: object
  *       properties:
@@ -658,5 +621,30 @@ router.post(
   tokenVerify,
   authMovies.getmovieDetails
 );
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     getProfileModel:
+ *       type: object
+ *       
+ */
+
+/**
+ * @swagger
+ * /getAllMovieDetails:
+ *  get:
+ *      summary: Used to get user information.
+ *      tags:
+ *          - Mad about movies API's
+ *      description: Get all Post Detail
+ *      responses:
+ *        200:
+ *          description: Get data successfully.
+ */
+
+router.get("/getAllMovieDetails",tokenVerify,authMovies.getAllMovieDetails);
 
 export default router;
