@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import { Schema } from "mongoose";
 import { textReview } from "../interface/textReviewInterface";
-const Model_Name = "textMsg";
+const Model_Name = "review";
 
 const textMsgSchema = new Schema<textReview>(
   {
@@ -16,13 +16,16 @@ const textMsgSchema = new Schema<textReview>(
         type:Number
     },
     comment:{
-         type:String
+         type:Number
     },
     description: {
       type: String,
     },
     title: {
       type: String,
+    },
+    likePercent: {
+      type: Number,
     },
   },
 

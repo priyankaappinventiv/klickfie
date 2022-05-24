@@ -5,6 +5,7 @@ import signUpValidate from "../validator/signUpvalidator";
 import loginValidate from "../validator/loginValidator";
 import tokenVerify from "../services/verifyToken";
 import authPost from "../controllers/postController";
+import addPostValidation from "../validator/createPostValidator";
 const router = express.Router();
 
 /**
@@ -266,7 +267,7 @@ router.post("/socialMediaGoogle", authUser.socialMediaGoogle);
  *              description: Post Uploaded..
  */
 
-router.post("/addPost", tokenVerify, authPost.addPosts);
+router.post("/addPost", tokenVerify,addPostValidation, authPost.addPosts);
 
 /**
  * @swagger

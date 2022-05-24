@@ -51,7 +51,6 @@ const getPostDetails = async (req: Request, res: Response): Promise<any> => {
   try {
     const data: string = await userPost
       .findOne({ _id: req.body.post_id })
-      .populate("like")
       .populate("comment")
       .lean();
     console.log(data);
