@@ -77,7 +77,9 @@ export const constant = {
     likeErrorMsg:"Post not found",
     disLikeErrorMsg:"Post not found",
     commentMsg:"Page not found",
-    tokenMsg:"A token is required for authentication"
+    tokenMsg:"A token is required for authentication",
+    createqMsg:"Question Posted.",
+    commentQueryMsg:"Comment Posted.",
   },
 };
 

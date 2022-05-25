@@ -4,7 +4,11 @@ import { textReview } from "../interface/textReviewInterface";
 const Model_Name = "review";
 
 const textMsgSchema = new Schema<textReview>(
-  {
+  { 
+    movie_id: {
+      type: Schema.Types.ObjectId,
+      require: true,
+    },
     user_id: {
       type: Schema.Types.ObjectId,
       require: true,

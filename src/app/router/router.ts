@@ -1,5 +1,6 @@
 import authUser from "../controllers/userController";
 import authMovies from "../controllers/moviesController";
+import authLoveGuru from "../controllers/loveGuruController";
 import express from "express";
 import signUpValidate from "../validator/signUpvalidator";
 import loginValidate from "../validator/loginValidator";
@@ -647,5 +648,145 @@ router.post(
  */
 
 router.get("/getAllMovieDetails",tokenVerify,authMovies.getAllMovieDetails);
+router.get("/getAllReview",tokenVerify,authMovies.getAllReview);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     addQuestionDataModel:
+ *       type: object
+ *       properties:
+ *         question:
+ *           type: string
+ *           description: body
+ *       example:
+ *         question: This is my 1st question on Love-Guru.
+ *
+ */
+
+/**
+ * @swagger
+ * /askQuestions:
+ *  post:
+ *      summary: Used to add question .
+ *      tags:
+ *          - Love-Guru API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/addQuestionDataModel'
+ *      responses:
+ *          200:
+ *              description: Question Posted.
+ */
+
+router.post("/askQuestions",tokenVerify,authLoveGuru.askQuestions);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     commentsDataModel:
+ *       type: object
+ *       properties:
+ *         body:
+ *           type: string
+ *           description: body
+ *         q_id:
+ *           type: string
+ *           description: body
+ *       example:
+ *         q_id: "627c941368d45828aa944c92"
+ *         comment: This is my 1st comment post on Love-Guru.       
+ *
+ */
+
+/**
+ * @swagger
+ * /commentOnQuestions:
+ *  post:
+ *      summary: Used to comment post on Love-Guru.
+ *      tags:
+ *          - Love-Guru API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/commentsDataModel'
+ *      responses:
+ *          200:
+ *              description: Comment Posted.
+ */
+
+router.post("/commentOnQuestions",tokenVerify,authLoveGuru.commentOnQuestions);
+
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     getQuestionModel:
+ *       type: object
+ *       
+ */
+
+/**
+ * @swagger
+ * /getAllQuestion:
+ *  get:
+ *      summary: Used to get All Questions.
+ *      tags:
+ *          - Love-Guru API's
+ *      description: Get all Question Detail
+ *      responses:
+ *        200:
+ *          description: Get data successfully.
+ */
+
+router.get("/getAllQuestion",tokenVerify,authLoveGuru.getAllQuestion);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     getDataModel:
+ *       type: object
+ *       properties:
+ *         q_id:
+ *           type: string
+ *           description: body
+ *       example:
+ *         q_id: "627c941368d45828aa944c92"
+ *
+ */
+
+/**
+ * @swagger
+ * /getSinglePostDetails:
+ *  post:
+ *      summary: Used to get one single question information.
+ *      tags:
+ *          - Love-Guru API's
+ *      description: user
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/getDataModel'
+ *      responses:
+ *          200:
+ *              description: Get data successfully
+ */
+
+
+router.post("/getSinglePostDetails",tokenVerify,authLoveGuru.getSinglePostDetails);
+
 
 export default router;
