@@ -781,7 +781,7 @@ router.get("/getAllQuestion",tokenVerify,authLoveGuru.getAllQuestion);
  * @swagger
  * components:
  *   schemas:
- *     getDataModel:
+ *     getQueryDataModel:
  *       type: object
  *       properties:
  *         q_id:
@@ -805,7 +805,7 @@ router.get("/getAllQuestion",tokenVerify,authLoveGuru.getAllQuestion);
  *          content:
  *              application/json:
  *                  schema:
- *                      $ref: '#components/schemas/getDataModel'
+ *                      $ref: '#components/schemas/getQueryDataModel'
  *      responses:
  *          200:
  *              description: Get data successfully
