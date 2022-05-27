@@ -9,6 +9,30 @@ import userPost from "../model/addPostModel";
 import userComment from "../model/commentModel";
 import user from "../model/userModel";
 
+const getData = async (req: Request, res: Response): Promise<any> => {
+  try {
+    const userId: string = req.body._id;
+    const data: HydratedDocument<iUser> | null = await user
+      .findOne({userId})
+    //console.log(data?.email);
+    if (!data) {
+      responses.status.statusCode = 400;
+      responses.status.status = false;
+      responses.status.message = constant.message.postDetailMsg;
+      res.status(constant.statusCode.success).json(responses.status);
+    } else {
+      res.status(constant.statusCode.success).json({statusCode: 200, status: true,email:data.email});
+    }
+  } catch (err) {
+    responses.status.message = constant.message.serverError;
+    responses.status.statusCode = 500;
+    responses.status.status = false;
+    res.status(constant.statusCode.serverError).json(responses.status);
+  }
+};
+
+
+
 const addPosts = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId: string = req.body._id;
@@ -214,6 +238,7 @@ const commentPost = async (req: Request, res: Response): Promise<void> => {
 };
 
 export default {
+  getData,
   addPosts,
   getPostDetails,
   getAllPost,

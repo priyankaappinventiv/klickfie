@@ -228,6 +228,32 @@ router.post("/socialMediaFb", authUser.socialMediaFb);
 
 router.post("/socialMediaGoogle", authUser.socialMediaGoogle);
 
+
+// /**
+//  * @swagger
+//  * components:
+//  *   schemas:
+//  *     getDataModel:
+//  *       type: object
+//  *       
+//  */
+
+// /**
+//  * @swagger
+//  * /getData:
+//  *  get:
+//  *      summary: Used to get Email.
+//  *      tags:
+//  *          - User Post API's
+//  *      description: Get email of user.
+//  *      responses:
+//  *        200:
+//  *          description: Get data successfully.
+//  */
+
+//  router.get("/getData",tokenVerify,authPost.getData);
+
+
 /**
  * @swagger
  * components:
@@ -368,7 +394,7 @@ router.get("/getAllPost",tokenVerify,authPost.getAllPost);
  *              description: Post liked.
  */
 
-router.post("/likePost",tokenVerify,  authPost.postLikes);
+ router.post("/likePost",tokenVerify,  authPost.postLikes);
 
 
 /**
@@ -787,6 +813,8 @@ router.get("/getAllQuestion",tokenVerify,authLoveGuru.getAllQuestion);
 
 
 router.post("/getSinglePostDetails",tokenVerify,authLoveGuru.getSinglePostDetails);
+
+
 
 
 export default router;

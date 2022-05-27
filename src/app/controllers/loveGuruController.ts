@@ -64,7 +64,7 @@ const getAllQuestion = async (req: Request, res: Response): Promise<any> => {
     },
     {
       $project: {
-        _id: 0,
+        _id: 1,
         question: 1,
         createdAt: 1,
         "result.imageUrl": 1,
@@ -146,7 +146,7 @@ const getSinglePostDetails = async (
         },
         {
           $project: {
-            _id: 0,
+            _id: 1,
             question: 1,
             createdAt: 1,
             "userDetails.name": 1,
@@ -159,9 +159,11 @@ const getSinglePostDetails = async (
         },
       ]
     );
-    return res.status(200).json(userQueryDetails);
+    return res
+    .status(200)
+    .json({ statusCode: 200, status: true, data: userQueryDetails });
   } catch (error: any) {
-    return res.status(400).json("error");
+    return res.status(400).json({ statusCode: 200, status: true, message: "Id not matched." });
   }
 };
 
