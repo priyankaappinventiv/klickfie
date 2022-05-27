@@ -113,7 +113,6 @@ const getSinglePostDetails = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  try {
     const q_id=new Types.ObjectId(req.body.q_id);
     const userQueryDetails = await askQuestion.aggregate(
       [
@@ -161,10 +160,7 @@ const getSinglePostDetails = async (
     );
     return res
     .status(200)
-    .json({ statusCode: 200, status: true, data: userQueryDetails });
-  } catch (error: any) {
-    return res.status(400).json({ statusCode: 200, status: true, message: "Id not matched." });
-  }
+    .json({ statusCode: 200, status: true, data: userQueryDetails }); 
 };
 
 export default {
