@@ -6,6 +6,7 @@ import { Request, Response } from "express";
 import askQuestion from "../model/loveModel";
 import { commentOnQuestion } from "../interface/commentOnQInterface";
 import commentOnQ from "../model/commentOnQModel";
+import {Types} from "mongoose"
 
 const askQuestions = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -29,25 +30,56 @@ const askQuestions = async (req: Request, res: Response): Promise<void> => {
 };
 
 const getAllQuestion = async (req: Request, res: Response): Promise<any> => {
-  try {
-    const data: Object = await askQuestion.find();
-    console.log(data);
-    if (!data) {
-      responses.status.statusCode = 400;
-      responses.status.status = false;
-      responses.status.message = constant.message.postDetailMsg;
-      res.status(constant.statusCode.success).json(responses.status);
-    } else {
-      res
-        .status(constant.statusCode.success)
-        .json({ statusCode: 200, status: true, data: data });
-    }
-  } catch (err) {
-    responses.status.message = constant.message.serverError;
-    responses.status.statusCode = 500;
-    responses.status.status = false;
-    res.status(constant.statusCode.serverError).json(responses.status);
-  }
+  const getQueryDetails = await askQuestion.aggregate([
+    {
+      $lookup: {
+        from: "users",
+        foreignField: "_id",
+        localField: "user_id",
+        as: "result",
+      },
+    },
+    { $unwind: "$result" },
+    {
+      $lookup: {
+        from: "commentonqs",
+        foreignField: "q_id",
+        localField: "_id",
+        as: "final",
+      },
+    },
+    {
+      $addFields: {
+        lastComments: { $slice: ["$final", -1] },
+      },
+    },
+
+    {
+      $lookup: {
+        from: "users",
+        localField: "lastComments.user_id",
+        foreignField: "_id",
+        as: "lastUser",
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        question: 1,
+        createdAt: 1,
+        "result.imageUrl": 1,
+        "lastComments.comment": 1,
+        "lastUser.name": 1,
+        totalComments: { $size: "$final" },
+      },
+    },
+    {
+      $sort: { createdAt: -1 },
+    },
+  ]);
+  return res
+    .status(200)
+    .json({ statusCode: 200, status: true, data: getQueryDetails });
 };
 
 const commentOnQuestions = async (
@@ -81,52 +113,55 @@ const getSinglePostDetails = async (
   req: Request,
   res: Response
 ): Promise<any> => {
-  const { q_id } = req.body;
-  if (q_id) {
-    const questionPostedBy = await askQuestion.aggregate([
-      {
-        $lookup: {
-          from: "users", //Collection name
-          localField: "user_id", //local field name
-          foreignField: "_id", // foreignfield
-          as: "loveGuru", //any thing you want to write.
+  try {
+    const q_id=new Types.ObjectId(req.body.q_id);
+    const userQueryDetails = await askQuestion.aggregate(
+      [
+        { $match: { _id: { $eq: q_id } } },
+        {
+          $lookup: {
+            from: "users",
+            foreignField: "_id",
+            localField: "user_id",
+            as: "userDetails",
+          },
         },
-      },
-      { $unwind: "$loveGuru" },
-      {
-        $project: {
-          "loveGuru.name": 1,
-          "loveGuru.imageUrl": 1,
-          question: 1,
-          createdAt: 1,
+        {
+          $lookup: {
+            from: "commentonqs",
+            foreignField: "q_id",
+            localField: "_id",
+            pipeline: [
+              {
+                $lookup: {
+                  from: "users",
+                  foreignField: "_id",
+                  localField: "user_id",
+                  as: "commentUser",
+                },
+              },
+            ],
+            as: "Comments",
+          },
         },
-      },
-    ]);
-    const commentedBy = await commentOnQ.aggregate([
-      {
-        $lookup: {
-          from: "users", //Collection name
-          localField: "user_id", //local field name
-          foreignField: "_id", // foreignfield
-          as: "commentBy", //any thing you want to write.
+        {
+          $project: {
+            _id: 0,
+            question: 1,
+            createdAt: 1,
+            "userDetails.name": 1,
+            "userDetails.imageUrl": 1,
+            "Comments.comment": 1,
+            "Comments.createdAt": 1,
+            "Comments.commentUser.name": 1,
+            "Comments.commentUser.imageUrl": 1,
+          },
         },
-      },
-      { $unwind: "$commentBy" },
-      {
-        $project: {
-          comment: 1,
-          createdAt: 1,
-          "commentBy.name": 1,
-          "commentBy.imageUrl": 1,
-        },
-      },
-    ]);
-    res.status(200).json({ statusCode:200,status:true,questionPostedBy, commentedBy });
-  } else {
-    responses.status.statusCode = 400;
-    responses.status.status = false;
-    responses.status.message = constant.message.likeErrorMsg;
-    res.status(constant.statusCode.success).json(responses.status);
+      ]
+    );
+    return res.status(200).json(userQueryDetails);
+  } catch (error: any) {
+    return res.status(400).json("error");
   }
 };
 
