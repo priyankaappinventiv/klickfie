@@ -496,35 +496,33 @@ router.post("/madAboutMovies", tokenVerify, authMovies.madAboutMovies);
  *     textReviewDataModel:
  *       type: object
  *       required:
- *         - like
- *         - dislike
- *         - comment
+ *         - movie_id
+ *         - user_id
  *         - title
  *         - description
- *         - post_id
+ *         - likePercent
  *       properties:
- *         like:
+ *         movie_id:
  *           type: string
- *           description: like
- *         dislike:
+ *           description: movie_id
+ *         user_id:
  *           type: string
- *           description: dislike
+ *           description: user_id
  *         title:
  *           type: string
  *           description: title
- *         comment:
- *           type: string
- *           description: comment
  *         description:
  *           type: string
- *           description: description of post
+ *           description: description
+ *         likePercent:
+ *           type: string
+ *           description: likePercent
  *       example:
- *         "post_id": "627a43e040d46c7ed815f56a"
- *         "like": 1
- *         "dislike": 2
+ *         "movie_id": "627a43e040d46c7ed815f56a"
+ *         "user_id": "627a43e040d46c7ed815f56a"
  *         "title": "The enormous visuality of Atlantis!"
- *         "comment": "Hye nice post"
- *         "description": "The enormous visuality."       
+ *         "description": "The enormous visuality." 
+ *         "likePercent": 90      
  *
  */
 
@@ -547,69 +545,9 @@ router.post("/madAboutMovies", tokenVerify, authMovies.madAboutMovies);
  *              description: Post Uploaded..
  */
 
-//router.post("/textReview", tokenVerify, authMovies.textReview);
+router.post("/textReview", tokenVerify, authMovies.textReviews);
 
-/**
- * @swagger
- * components:
- *   schemas:
- *     audioReviewDataModel:
- *       type: object
- *       required:
- *         - like
- *         - dislike
- *         - comment
- *         - title
- *         - audioUrl
- *         - post_id
- *       properties:
- *         like:
- *           type: string
- *           description: like
- *         dislike:
- *           type: string
- *           description: dislike
- *         title:
- *           type: string
- *           description: title
- *         comment:
- *           type: string
- *           description: comment
- *         audioUrl:
- *           type: string
- *           description: audioUrl
- *       example:
- *         "post_id": "627a43e040d46c7ed815f56a"
- *         "like": 1
- *         "dislike": 2
- *         "title": "The enormous visuality of Atlantis!"
- *         "comment": "Hye nice post"
- *         "description": "http://localhost:3009/file_1649397216117.png"       
- *
- */
-
-/**
- * @swagger
- * /audioReview:
- *  post:
- *      summary: Used to add post on social media.
- *      tags:
- *          - Mad about movies API's
- *      description: user
- *      requestBody:
- *          required: true
- *          content:
- *              application/json:
- *                  schema:
- *                      $ref: '#components/schemas/audioReviewDataModel'
- *      responses:
- *          200:
- *              description: Post Uploaded..
-*/
-
-//router.post("/audioReview", tokenVerify, authMovies.audioReview);
-
-/**
+/** 
  * @swagger
  * components:
  *   schemas:

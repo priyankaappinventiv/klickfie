@@ -13,15 +13,6 @@ const textMsgSchema = new Schema<textReview>(
       type: Schema.Types.ObjectId,
       require: true,
     },
-    like:{
-        type:Number
-    },
-    dislike:{
-        type:Number
-    },
-    comment:{
-         type:Number
-    },
     description: {
       type: String,
     },
