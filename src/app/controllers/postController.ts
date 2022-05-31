@@ -31,14 +31,21 @@ const getData = async (req: Request, res: Response): Promise<any> => {
   }
 };
 
-
-
 const addPosts = async (req: Request, res: Response): Promise<void> => {
   try {
-    const userId: string = req.body._id;
+    const _id: string = req.body._id._id;
+    console.log(_id)
+    const isUserExist: HydratedDocument<iUser> | null = await user.findById({_id});
+    console.log(isUserExist?._id)
     const { title, imageUrl }: userData = req.body;
+    if (!isUserExist) {
+      responses.status.statusCode = 400;
+      responses.status.status = false;
+      responses.status.message = constant.message.addpostMsg;
+      res.status(constant.statusCode.invalid).json(responses.status);
+    } else {
     const userPosts: HydratedDocument<post> | null = new userPost({
-      user_id: userId,
+      user_id: _id,
       title: title,
       imageUrl: imageUrl,
     });
@@ -47,7 +54,7 @@ const addPosts = async (req: Request, res: Response): Promise<void> => {
     responses.status.status = true;
     responses.status.message = constant.message.postMsg;
     res.status(constant.statusCode.success).json(responses.status);
-  } catch (err: any) {
+  } }catch (err: any) {
     responses.status.message = constant.message.serverError;
     responses.status.statusCode = 500;
     responses.status.status = false;
@@ -169,7 +176,6 @@ const postLikes = async (req: Request, res: Response): Promise<any> => {
           {
             $set: {
               like: postLiked === undefined ? 1 : postLiked + 1,
-              isLiked: true,
             },
           },
           {

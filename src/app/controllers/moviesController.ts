@@ -132,9 +132,17 @@ const textReviews = async (req: Request, res: Response): Promise<void> => {
 // };
 
 const getAllReview = async (req: Request, res: Response): Promise<any> => {
-  const movie_id=new Types.ObjectId(req.body.movie_id);
+  const _id=new Types.ObjectId(req.body.movie_id);
+  const isMovieId: HydratedDocument<movie> | null = await Movie.findById({_id});
+  console.log(isMovieId?.id)
+  if(!isMovieId?._id){
+      responses.status.statusCode = 400;
+      responses.status.status = false;
+      responses.status.message = constant.message.movieMsg;
+      res.status(constant.statusCode.invalid).json(responses.status);
+  }else{
   const allPostDetails = await Movie.aggregate([
-    { $match: { _id: { $eq: movie_id } } },
+    { $match: { _id: { $eq: _id } } },
     {
       $lookup: {
         from: "reviews", //Collection name
@@ -150,7 +158,7 @@ const getAllReview = async (req: Request, res: Response): Promise<any> => {
             },
           },
         ],
-        as: "reviews",
+        as: "reviewBy",
       },
     },
     {
@@ -159,16 +167,17 @@ const getAllReview = async (req: Request, res: Response): Promise<any> => {
         movieName:1,
         category:1,
         createdAt: 1,
-        "reviews.title": 1,
-        "reviews.description":1,
-        "reviews.likePercent": 1,
-        "reviews.createdAt": 1,
-        "reviews.reviewDetails.name": 1,
-        "reviews.reviewDetails.imageUrl": 1,
+        "reviewBy.title": 1,
+        "reviewBy.description":1,
+        "reviewBy.likePercent": 1,
+        "reviewBy.createdAt": 1,
+        "reviewDetails.review.name": 1,
+        "reviewsBy.reviewDetails.imageUrl": 1,
       },
     },
   ]);
   res.status(200).json(allPostDetails);
+  }
 };
 
 export default {

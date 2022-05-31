@@ -80,6 +80,8 @@ export const constant = {
     tokenMsg:"A token is required for authentication",
     createqMsg:"Question Posted.",
     commentQueryMsg:"Comment Posted.",
+    movieMsg:"Movie id does not matched.",
+    addpostMsg:"User not exist."
   },
 };
 

@@ -612,7 +612,46 @@ router.post(
  */
 
 router.get("/getAllMovieDetails",tokenVerify,authMovies.getAllMovieDetails);
-router.get("/getAllReview",tokenVerify,authMovies.getAllReview);
+
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     getReviewModel:
+ *       type: object
+ *       required:
+ *         - movie_id
+ *       properties:
+ *         movie_id:
+ *           type: string
+ *           description: movie_id
+ *       example:
+ *         "movie_id": "627c941368d45828aa944c92"
+ *
+ */
+
+/**
+ * @swagger
+ * /getAllReview:
+ *  post:
+ *      summary: Used to get user information.
+ *      tags:
+ *          - Mad about movies API's
+ *      description: userProfile
+ *      requestBody:
+ *          required: true
+ *          content:
+ *              application/json:
+ *                  schema:
+ *                      $ref: '#components/schemas/getReviewModel'
+ *      responses:
+ *        200:
+ *          description: Get data successfully.
+ */
+
+ 
+
+router.post("/getAllReview",tokenVerify,authMovies.getAllReview);
 
 /**
  * @swagger
