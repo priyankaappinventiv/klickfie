@@ -16,8 +16,7 @@ const addPostSchema = new Schema<post>(
       type: String,
     },
     like:{
-      type: Number,
-      default:0
+      type: [Schema.Types.ObjectId],
     },
     comment: {
       type:String

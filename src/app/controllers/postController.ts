@@ -8,28 +8,29 @@ import { constant } from "../constant/constant";
 import userPost from "../model/addPostModel";
 import userComment from "../model/commentModel";
 import user from "../model/userModel";
+import {Types} from "mongoose";
 
-const getData = async (req: Request, res: Response): Promise<any> => {
-  try {
-    const userId: string = req.body._id;
-    const data: HydratedDocument<iUser> | null = await user
-      .findOne({userId})
-    //console.log(data?.email);
-    if (!data) {
-      responses.status.statusCode = 400;
-      responses.status.status = false;
-      responses.status.message = constant.message.postDetailMsg;
-      res.status(constant.statusCode.success).json(responses.status);
-    } else {
-      res.status(constant.statusCode.success).json({statusCode: 200, status: true,email:data.email});
-    }
-  } catch (err) {
-    responses.status.message = constant.message.serverError;
-    responses.status.statusCode = 500;
-    responses.status.status = false;
-    res.status(constant.statusCode.serverError).json(responses.status);
-  }
-};
+// const getData = async (req: Request, res: Response): Promise<any> => {
+//   try {
+//     const userId: string = req.body._id;
+//     const data: HydratedDocument<iUser> | null = await user
+//       .findOne({userId})
+//     //console.log(data?.email);
+//     if (!data) {
+//       responses.status.statusCode = 400;
+//       responses.status.status = false;
+//       responses.status.message = constant.message.postDetailMsg;
+//       res.status(constant.statusCode.success).json(responses.status);
+//     } else {
+//       res.status(constant.statusCode.success).json({statusCode: 200, status: true,email:data.email});
+//     }
+//   } catch (err) {
+//     responses.status.message = constant.message.serverError;
+//     responses.status.statusCode = 500;
+//     responses.status.status = false;
+//     res.status(constant.statusCode.serverError).json(responses.status);
+//   }
+// };
 
 const addPosts = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -141,7 +142,7 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
         user_id: 1,
         imageUrl: 1,
         title: 1,
-        like: 1,
+        totalLikes: {$size:"$like"},
         createdAt: 1,
         "postCreatedBy.name": 1,
         "postCreatedBy.imageUrl": 1,
@@ -159,55 +160,35 @@ const getAllPost = async (req: Request, res: Response): Promise<any> => {
 
 const postLikes = async (req: Request, res: Response): Promise<any> => {
   try {
-    const postId: any = req.body.post_id;
-    const userId: string = req.body._id;
-    const is_Liked: HydratedDocument<iUser> | null = await user.findById(userId);
-    const isUser: HydratedDocument<post> | null = await userPost.findById(postId);
-    if (!isUser) {
-      responses.status.statusCode = 401;
-      responses.status.status = false;
-      responses.status.message = constant.message.likeErrorMsg;
-      res.status(constant.statusCode.success).json(responses.status);
-    } else {
-      if (is_Liked?.isLiked === false) {
-        const postLiked: any = isUser?.like;
-        await userPost.findByIdAndUpdate(
-          postId,
-          {
-            $set: {
-              like: postLiked === undefined ? 1 : postLiked + 1,
-            },
-          },
-          {
-            new: true,
-          }
-        );
-        responses.status.statusCode = 200;
-        responses.status.status = true;
-        responses.status.message = constant.message.likeMsg;
-        res.status(constant.statusCode.success).json(responses.status);
-      } else {
-        let postLiked: any = isUser?.like;
-        await userPost.findByIdAndUpdate(
-          postId,
-          {
-            $set: {
-              like: postLiked === undefined ? 1 : postLiked - 1,
-              isLiked: false,
-            },
-          },
-          {
-            new: true,
-          }
-        );
-        responses.status.statusCode = 200;
-        responses.status.status = true;
-        responses.status.message = constant.message.disLikeMsg;
-        res.status(constant.statusCode.success).json(responses.status);
-      }
+    const postId: Types.ObjectId = new Types.ObjectId(req.body.post_id);
+    const userId: Types.ObjectId = req.body._id._id;
+    let userResponses 
+    const isUser=await userPost.findById(postId)    
+    const isLiked = await userPost.findOne({ _id: postId, like: { $elemMatch: { $eq: userId } } })    
+    if (!isLiked) {
+      
+      await userPost.findByIdAndUpdate(postId, {
+        $addToSet: {
+          like: userId
+        }
+      })
+      userResponses = "Post liked"
     }
-  } catch (err: any) {
-    console.log(err);
+    else {  
+      await userPost.findByIdAndUpdate(postId, {
+        $pull: {
+          like: userId
+        }
+      })
+
+      userResponses = "Post disliked"
+    }
+    return res
+    .status(200)
+    .json({ statusCode: 200, status: true, message: userResponses });
+  } catch (error: any) {
+   
+    return res.status(500).json(error);
   }
 };
 
@@ -244,7 +225,6 @@ const commentPost = async (req: Request, res: Response): Promise<void> => {
 };
 
 export default {
-  getData,
   addPosts,
   getPostDetails,
   getAllPost,

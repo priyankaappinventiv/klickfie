@@ -6,7 +6,7 @@ export interface post {
     imageUrl: String;
     videoUrl?: String;
     title: String;
-    like: Number;
+    like: [Schema.Types.ObjectId];
     comment: String;
     isLiked?:Boolean;
     createdAt: Date;
